@@ -1,0 +1,95 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Montserrat', 'Arial', 'Helvetica', 'sans-serif'],
+        display: ['Montserrat', 'Arial', 'Helvetica', 'sans-serif'],
+        body: ['Arial', 'Helvetica', 'sans-serif'],
+      },
+      colors: {
+        mkce: {
+          50: '#edf8ff',
+          100: '#d6eeff',
+          200: '#b5e3ff',
+          300: '#83d4ff',
+          400: '#48baff',
+          500: '#06A3DA',
+          600: '#06A3DA',
+          700: '#073f69',
+          800: '#09203f',
+          900: '#0a1628',
+          950: '#020024',
+        },
+        navy: {
+          light: '#537895',
+          DEFAULT: '#09203f',
+          dark: '#020024',
+        },
+        teal: {
+          dark: '#0b4d4e',
+        },
+        gold: {
+          light: '#f9d423',
+          DEFAULT: '#f7ce58',
+          mid: '#d89a06',
+          dark: '#8e6300',
+          gradient: '#ff8c00',
+        },
+        surface: {
+          50: '#f7fbff',
+          100: '#edf6ff',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        }
+      },
+      boxShadow: {
+        'card': '0 4px 30px rgba(179, 193, 219, 0.3)',
+        'card-hover': '0 8px 40px rgba(179, 193, 219, 0.45)',
+        'nav': '0 2px 6px rgba(0, 0, 0, 0.25)',
+        'glow': '0 0 20px rgba(6, 163, 218, 0.2)',
+        'gold': '0 8px 18px rgba(157, 107, 0, 0.32)',
+        'gold-hover': '0 14px 26px rgba(157, 107, 0, 0.42)',
+      },
+      backgroundImage: {
+        'mkce-utility': 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(11,77,78,1) 53%, rgba(9,60,121,1) 95%)',
+        'mkce-nav': 'linear-gradient(to top, #09203f 0%, #537895 100%)',
+        'mkce-dark': 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)',
+        'mkce-gold': 'linear-gradient(180deg, #f7ce58 0%, #d89a06 100%)',
+        'mkce-gold-hover': 'linear-gradient(180deg, #ffdc79 0%, #e3a510 100%)',
+        'mkce-green': 'linear-gradient(135deg, #14895e 0%, #0b5a3c 100%)',
+        'mkce-hero': 'linear-gradient(135deg, #020024 0%, #09203f 40%, #073f69 70%, #06A3DA 100%)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.4s ease-out',
+        'slide-down': 'slideDown 0.3s ease-out',
+        'scale-in': 'scaleIn 0.3s ease-out',
+        'pulse-gold': 'pulseGold 2.4s ease-in-out infinite',
+        'shimmer-border': 'shimmerBorder 3s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'counter': 'counter 2s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+        slideDown: { '0%': { opacity: '0', transform: 'translateY(-10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+        scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+        pulseGold: { '0%, 100%': { boxShadow: '0 0 0 0 rgba(249, 212, 35, 0.45)' }, '50%': { boxShadow: '0 0 0 7px rgba(249, 212, 35, 0)' } },
+        shimmerBorder: { '0%': { backgroundPosition: '0% 0%' }, '100%': { backgroundPosition: '200% 0%' } },
+        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+      },
+    },
+  },
+  plugins: [],
+}
