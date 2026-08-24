@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Search, MapPin, Clock, Building2, Briefcase, GraduationCap, X } from 'lucide-react';
-import { format } from 'date-fns';
+import { Plus, Search, MapPin, Building2, Briefcase, GraduationCap, X, Sparkles, CheckCircle2, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import { StaggerContainer, StaggerItem } from '../components/animations/StaggerContainer';
+import { triggerConfetti } from '../components/animations/Confetti';
+import SEO from '../components/SEO';
 
 export default function Jobs() {
   const { user } = useAuth();
@@ -12,20 +15,9 @@ export default function Jobs() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState({ type: '', domain: '' });
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    company: '',
-    domain: '',
-    location: '',
-    stipend: '',
-    deadline: '',
-    type: 'internship',
-  });
+  const [form, setForm] = useState({ title: '', description: '', company: '', domain: '', location: '', stipend: '', deadline: '', type: 'internship' });
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  useEffect(() => { fetchJobs(); }, []);
 
   const fetchJobs = async () => {
     try {
@@ -34,9 +26,7 @@ export default function Jobs() {
       if (filter.domain) params.append('domain', filter.domain);
       const res = await api.get(`/jobs?${params.toString()}`);
       setJobs(res.data.data);
-    } catch (err) {
-      toast.error('Failed to load jobs');
-    }
+    } catch { toast.error('Failed to load opportunities'); }
     setLoading(false);
   };
 
@@ -44,386 +34,196 @@ export default function Jobs() {
     e.preventDefault();
     try {
       await api.post('/jobs', form);
-      toast.success('Job posted successfully!');
+      triggerConfetti({ particleCount: 75, spread: 65 });
+      toast.success('Opportunity posted successfully!');
       setShowCreate(false);
-      setForm({
-        title: '',
-        description: '',
-        company: '',
-        domain: '',
-        location: '',
-        stipend: '',
-        deadline: '',
-        type: 'internship',
-      });
+      setForm({ title: '', description: '', company: '', domain: '', location: '', stipend: '', deadline: '', type: 'internship' });
       fetchJobs();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to post job');
+      toast.error(err.response?.data?.message || 'Failed to post opportunity');
     }
   };
 
   const applyToJob = async (jobId) => {
     try {
       await api.post(`/jobs/${jobId}/apply`);
-      toast.success('Applied successfully!');
+      triggerConfetti({ particleCount: 80, spread: 70 });
+      toast.success('Application submitted successfully!');
       fetchJobs();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to apply');
+      toast.error(err.response?.data?.message || 'Failed to submit application');
     }
   };
 
-  const filtered = jobs.filter(
-    (j) =>
-      j.title.toLowerCase().includes(search.toLowerCase()) ||
-      j.company?.toLowerCase().includes(search.toLowerCase()) ||
-      j.domain?.toLowerCase().includes(search.toLowerCase())
-  );
-
+  const filtered = jobs.filter((j) => j.title.toLowerCase().includes(search.toLowerCase()) || j.company?.toLowerCase().includes(search.toLowerCase()) || j.domain?.toLowerCase().includes(search.toLowerCase()));
   const canPostJob = ['faculty', 'hod', 'admin', 'leader'].includes(user?.role);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 max-w-7xl mx-auto font-sans">
+      <SEO title="Career Opportunities & Campus Placement Drives" description="Explore software engineering internships, core placement drives, and research fellowships for MKCE engineering students." keywords="MKCE Placements, Engineering Jobs Karur, College Internships Tamil Nadu, Campus Placement Drives" canonical="/jobs" />
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="page-title">Jobs &amp; Internships</h1>
-          <p className="text-surface-500 mt-1">Find your next opportunity</p>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="badge-blue"><Sparkles size={11} className="mr-1" />Career & Placement Cell</span>
+          </div>
+          <h1 className="page-heading">Opportunities & Internships</h1>
+          <p className="text-surface-500 text-sm mt-1">Browse verified campus placement drives, summer internships, and research roles.</p>
         </div>
         {canPostJob && (
-          <button
-            onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2"
-          >
-            <Plus size={18} />
-            Post Job
+          <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto shimmer-btn">
+            <Plus size={18} /><span>Post Opportunity</span>
           </button>
         )}
       </div>
 
+      {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400"
-          />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input-field pl-10"
-            placeholder="Search by title, company, or domain..."
-          />
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
+          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="input-mkce pl-11 py-3" placeholder="Search roles, companies (e.g. Amazon, Zoho, Bosch)..." />
         </div>
-        <select
-          value={filter.type}
-          onChange={(e) => setFilter({ ...filter, type: e.target.value })}
-          className="input-field w-full sm:w-40"
-        >
+        <select value={filter.type} onChange={(e) => setFilter({ ...filter, type: e.target.value })} className="input-mkce sm:w-44 cursor-pointer">
           <option value="">All Types</option>
-          <option value="internship">Internship</option>
-          <option value="job">Job</option>
+          <option value="internship">Internships</option>
+          <option value="job">Full-time Roles</option>
         </select>
-        <input
-          type="text"
-          value={filter.domain}
-          onChange={(e) => setFilter({ ...filter, domain: e.target.value })}
-          className="input-field w-full sm:w-48"
-          placeholder="Filter by domain..."
-        />
       </div>
 
-      {showCreate && (
-        <div className="fixed inset-0 bg-surface-900/50 z-50 flex items-center justify-center p-4 animate-in">
-          <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 animate-slide-up">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="section-title">Post Opportunity</h2>
-              <button
-                onClick={() => setShowCreate(false)}
-                className="text-surface-400 hover:text-surface-600 transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={createJob} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                  Role Title
-                </label>
-                <input
-                  type="text"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  required
-                  className="input-field"
-                  placeholder="e.g., Frontend Developer Intern"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                  Description
-                </label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                  required
-                  className="input-field resize-none"
-                  placeholder="Describe the role and requirements..."
-                  rows={4}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+      {/* Post Modal */}
+      <AnimatePresence>
+        {showCreate && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.2)' }}>
+              <div className="p-6 border-b border-surface-100 text-white flex items-center justify-between"
+                style={{ background: 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)' }}>
                 <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    value={form.company}
-                    onChange={(e) =>
-                      setForm({ ...form, company: e.target.value })
-                    }
-                    className="input-field"
-                    placeholder="Company name"
-                  />
+                  <h2 className="font-display font-bold text-lg">Post Career Opportunity</h2>
+                  <p className="text-xs text-mkce-200/80 mt-0.5">Publish job requirements or internship openings</p>
+                </div>
+                <button onClick={() => setShowCreate(false)} className="p-1 text-white/60 hover:text-white"><X size={20} /></button>
+              </div>
+              <form onSubmit={createJob} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto scrollbar-thin">
+                <div>
+                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Role Title</label>
+                  <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="input-mkce" placeholder="e.g., Associate Software Engineer" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Domain
-                  </label>
-                  <input
-                    type="text"
-                    value={form.domain}
-                    onChange={(e) =>
-                      setForm({ ...form, domain: e.target.value })
-                    }
-                    className="input-field"
-                    placeholder="e.g., Web Dev"
-                  />
+                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Company / Organization</label>
+                  <input type="text" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required className="input-mkce" placeholder="e.g. Zoho Corporation" />
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={form.location}
-                    onChange={(e) =>
-                      setForm({ ...form, location: e.target.value })
-                    }
-                    className="input-field"
-                    placeholder="City or Remote"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Domain</label>
+                    <input type="text" value={form.domain} onChange={(e) => setForm({ ...form, domain: e.target.value })} className="input-mkce" placeholder="e.g. AI / Web / Cloud" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Location</label>
+                    <input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="input-mkce" placeholder="Chennai / Remote" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Stipend / Package</label>
+                    <input type="text" value={form.stipend} onChange={(e) => setForm({ ...form, stipend: e.target.value })} className="input-mkce" placeholder="e.g. ₹25,000/mo or 8 LPA" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Type</label>
+                    <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input-mkce cursor-pointer">
+                      <option value="internship">Internship</option>
+                      <option value="job">Full-time Job</option>
+                    </select>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Stipend / Salary
-                  </label>
-                  <input
-                    type="text"
-                    value={form.stipend}
-                    onChange={(e) =>
-                      setForm({ ...form, stipend: e.target.value })
-                    }
-                    className="input-field"
-                    placeholder="e.g., ₹10,000/month"
-                  />
+                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Description & Requirements</label>
+                  <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required className="input-mkce resize-none" placeholder="Describe skill requirements, eligibility criteria, etc." rows={3} />
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Application Deadline
-                  </label>
-                  <input
-                    type="date"
-                    value={form.deadline}
-                    onChange={(e) =>
-                      setForm({ ...form, deadline: e.target.value })
-                    }
-                    className="input-field"
-                  />
+                <div className="flex gap-3 pt-3">
+                  <button type="submit" className="btn-mkce flex-1 py-3 text-sm">Publish Opportunity</button>
+                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm">Cancel</button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Type
-                  </label>
-                  <select
-                    value={form.type}
-                    onChange={(e) =>
-                      setForm({ ...form, type: e.target.value })
-                    }
-                    className="input-field"
-                  >
-                    <option value="internship">Internship</option>
-                    <option value="job">Job</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button type="submit" className="btn-primary flex-1">
-                  Post
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCreate(false)}
-                  className="btn-secondary flex-1"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
+      {/* Jobs List */}
       {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-4 border-mkce-200 border-t-mkce-600"></div>
+        <div className="space-y-4">
+          {[1,2,3].map(i => <div key={i} className="skeleton rounded-3xl h-40" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="card p-12 text-center">
-          <div className="w-16 h-16 bg-mkce-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Briefcase size={32} className="text-mkce-500" />
+        <div className="card-premium p-12 text-center">
+          <div className="w-16 h-16 bg-mkce-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-mkce-600">
+            <Briefcase size={32} />
           </div>
-          <h3 className="section-title mb-2">No Opportunities Found</h3>
-          <p className="text-surface-500">
-            {search || filter.type || filter.domain
-              ? 'Try adjusting your search or filters.'
-              : 'Be the first to post an opportunity!'}
-          </p>
+          <h3 className="font-display font-bold text-mkce-900 text-lg">No Opportunities Found</h3>
+          <p className="text-surface-500 text-sm mt-1">Try adjusting your filters or search keywords.</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <StaggerContainer className="space-y-4">
           {filtered.map((job) => {
-            const hasApplied = job.applicants?.some(
-              (a) => a.user?._id === user?.id || a.user === user?.id
-            );
+            const hasApplied = job.applicants?.some((a) => a.user?._id === user?.id || a.user === user?.id || a?.user?.id === user?.id);
             return (
-              <div
-                key={job._id}
-                className="card card-interactive overflow-hidden flex flex-col sm:flex-row"
-              >
-                <div
-                  className={`w-full sm:w-1.5 flex-shrink-0 ${
-                    job.type === 'internship'
-                      ? 'bg-gradient-to-b from-blue-400 to-blue-600'
-                      : 'bg-gradient-to-b from-green-400 to-green-600'
-                  }`}
-                ></div>
-                <div className="flex-1 p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-display font-semibold text-lg text-surface-900">
-                          {job.title}
-                        </h3>
-                        <span
-                          className={`badge-primary ${
-                            job.type === 'internship'
-                              ? '!bg-blue-100 !text-blue-700'
-                              : '!bg-green-100 !text-green-700'
-                          }`}
-                        >
-                          {job.type === 'internship' ? (
-                            <span className="flex items-center gap-1">
-                              <GraduationCap size={12} /> Internship
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1">
-                              <Briefcase size={12} /> Job
+              <StaggerItem key={job._id}>
+                <div className="card-premium p-6 sm:p-7">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 text-white"
+                        style={{
+                          background: job.type === 'internship' ? 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          boxShadow: job.type === 'internship' ? '0 4px 12px rgba(6,163,218,0.25)' : '0 4px 12px rgba(16,185,129,0.25)',
+                        }}>
+                        {job.type === 'internship' ? <GraduationCap size={26} /> : <Briefcase size={26} />}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <h3 className="font-display font-extrabold text-lg sm:text-xl text-mkce-900">{job.title}</h3>
+                          <span className={`badge-mkce ${job.type === 'internship' ? 'badge-blue' : 'badge-green'}`}>
+                            {job.type === 'internship' ? 'Internship' : 'Full-Time'}
+                          </span>
+                          {job.domain && <span className="badge-gold">{job.domain}</span>}
+                        </div>
+                        <div className="flex items-center gap-4 mt-2 text-xs sm:text-sm text-surface-500 flex-wrap">
+                          {job.company && (
+                            <span className="flex items-center gap-1.5 font-semibold text-mkce-800">
+                              <Building2 size={15} className="text-mkce-500" />{job.company}
                             </span>
                           )}
-                        </span>
-                        {job.isVerified && (
-                          <span className="badge-success flex items-center gap-1">
-                            <svg
-                              className="w-3 h-3"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            Verified
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-surface-500 flex-wrap">
-                        {job.company && (
-                          <span className="flex items-center gap-1.5">
-                            <Building2 size={14} className="text-mkce-400" />
-                            {job.company}
-                          </span>
-                        )}
-                        {job.location && (
-                          <span className="flex items-center gap-1.5">
-                            <MapPin size={14} className="text-gold-500" />
-                            {job.location}
-                          </span>
-                        )}
-                        {job.deadline && (
-                          <span className="flex items-center gap-1.5">
-                            <Clock size={14} className="text-mkce-400" />
-                            Due {format(new Date(job.deadline), 'MMM d, yyyy')}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-surface-600 mt-2 line-clamp-2">
-                        {job.description}
-                      </p>
-                      <div className="flex items-center gap-3 mt-3">
-                        {job.stipend && (
-                          <span className="text-sm font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                            {job.stipend}
-                          </span>
-                        )}
-                        {job.domain && (
-                          <span className="badge-gold">{job.domain}</span>
-                        )}
+                          {job.location && (
+                            <span className="flex items-center gap-1.5 font-medium">
+                              <MapPin size={14} className="text-amber-500" />{job.location}
+                            </span>
+                          )}
+                          {job.stipend && (
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200/80 text-xs">{job.stipend}</span>
+                          )}
+                        </div>
+                        <p className="text-surface-600 text-xs sm:text-sm mt-3 leading-relaxed">{job.description}</p>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-surface-100">
-                    <span className="text-sm text-surface-400">
-                      {job.applicants?.length || 0} applicant
-                      {(job.applicants?.length || 0) !== 1 ? 's' : ''}
-                    </span>
-                    {user?.role === 'student' &&
-                      (hasApplied ? (
-                        <span className="badge-success flex items-center gap-1">
-                          <svg
-                            className="w-3.5 h-3.5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          Applied
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-surface-100/60 flex-shrink-0">
+                      <span className="text-xs text-surface-400 font-medium">{job.applicants?.length || 0} Applicants</span>
+                      {hasApplied ? (
+                        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200/80">
+                          <CheckCircle2 size={15} />Applied
                         </span>
                       ) : (
-                        <button
-                          onClick={() => applyToJob(job._id)}
-                          className="btn-primary text-sm px-4 py-1.5"
-                        >
-                          Apply Now
+                        <button onClick={() => applyToJob(job._id)} className="btn-mkce text-xs px-6 py-2.5 font-bold">
+                          <span>Quick Apply</span><Send size={13} />
                         </button>
-                      ))}
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
       )}
     </div>
   );

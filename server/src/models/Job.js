@@ -68,4 +68,7 @@ const JobSchema = new mongoose.Schema(
   }
 );
 
+JobSchema.index({ deadline: 1, isVerified: 1 });
+JobSchema.index({ domain: 1, type: 1 });
+
 module.exports = mongoose.model('Job', JobSchema);

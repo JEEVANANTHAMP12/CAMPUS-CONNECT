@@ -53,4 +53,7 @@ const ClubSchema = new mongoose.Schema(
   }
 );
 
+ClubSchema.index({ department: 1, isActive: 1 });
+ClubSchema.index({ name: 'text' });
+
 module.exports = mongoose.model('Club', ClubSchema);

@@ -4,13 +4,21 @@ const Notification = require('../models/Notification');
 
 exports.createAchievement = async (req, res) => {
   try {
-    const { title, description, club, department, media } = req.body;
+    const { title, description, club, department, media, badge } = req.body;
     const achievement = await Achievement.create({
-      title, description, user: req.user.id, club, department,
-      media: media || []
+      title,
+      description,
+      user: req.user.id,
+      club: club || undefined,
+      department: department || req.user.department || undefined,
+      media: Array.isArray(media) ? media : (media ? [media] : []),
+      badge: badge || '🏆 Achievement Unlocked',
     });
-    await User.findByIdAndUpdate(req.user.id, { $push: { achievements: achievement._id } });
-    res.status(201).json({ success: true, data: achievement });
+    await User.findByIdAndUpdate(req.user.id, { $addToSet: { achievements: achievement._id } });
+    const populated = await Achievement.findById(achievement._id)
+      .populate('user', 'name profileImage department')
+      .populate('club', 'name logo');
+    res.status(201).json({ success: true, data: populated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -18,14 +26,17 @@ exports.createAchievement = async (req, res) => {
 
 exports.getAchievements = async (req, res) => {
   try {
-    const { department, club, user, page = 1, limit = 20 } = req.query;
+    const { department, club, user, page = 1, limit = 50 } = req.query;
     const query = {};
     if (department) query.department = department;
     if (club) query.club = club;
     if (user) query.user = user;
     const skip = (page - 1) * limit;
-    const achievements = await Achievement.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit))
-      .populate('user', 'name profileImage department')
+    const achievements = await Achievement.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit, 10))
+      .populate('user', 'name profileImage department role')
       .populate('club', 'name logo')
       .populate('comments.author', 'name profileImage');
     const total = await Achievement.countDocuments(query);
@@ -38,7 +49,7 @@ exports.getAchievements = async (req, res) => {
 exports.getAchievement = async (req, res) => {
   try {
     const achievement = await Achievement.findById(req.params.id)
-      .populate('user', 'name profileImage department')
+      .populate('user', 'name profileImage department role')
       .populate('club', 'name logo')
       .populate('comments.author', 'name profileImage');
     if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found' });
@@ -67,7 +78,7 @@ exports.likeAchievement = async (req, res) => {
   try {
     const achievement = await Achievement.findById(req.params.id);
     if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found' });
-    const idx = achievement.likes.indexOf(req.user.id);
+    const idx = achievement.likes.findIndex((id) => id.toString() === req.user.id);
     if (idx > -1) {
       achievement.likes.splice(idx, 1);
     } else {
@@ -75,16 +86,20 @@ exports.likeAchievement = async (req, res) => {
       if (achievement.user.toString() !== req.user.id) {
         await Notification.create({
           user: achievement.user,
-          title: 'Achievement Liked',
-          message: `${req.user.name} liked your achievement "${achievement.title}"`,
+          title: 'Achievement Kudos! 🌟',
+          message: `${req.user.name} applauded your achievement "${achievement.title}"`,
           type: 'achievement',
           referenceId: achievement._id,
-          referenceModel: 'Achievement'
+          referenceModel: 'Achievement',
         });
       }
     }
     await achievement.save();
-    res.status(200).json({ success: true, data: achievement });
+    const populated = await Achievement.findById(achievement._id)
+      .populate('user', 'name profileImage department role')
+      .populate('club', 'name logo')
+      .populate('comments.author', 'name profileImage');
+    res.status(200).json({ success: true, data: populated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -99,14 +114,17 @@ exports.addComment = async (req, res) => {
     if (achievement.user.toString() !== req.user.id) {
       await Notification.create({
         user: achievement.user,
-        title: 'Achievement Comment',
+        title: 'New Achievement Comment',
         message: `${req.user.name} commented on your achievement "${achievement.title}"`,
         type: 'achievement',
         referenceId: achievement._id,
-        referenceModel: 'Achievement'
+        referenceModel: 'Achievement',
       });
     }
-    const populated = await Achievement.findById(achievement._id).populate('comments.author', 'name profileImage');
+    const populated = await Achievement.findById(achievement._id)
+      .populate('user', 'name profileImage department role')
+      .populate('club', 'name logo')
+      .populate('comments.author', 'name profileImage');
     res.status(200).json({ success: true, data: populated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -115,17 +133,22 @@ exports.addComment = async (req, res) => {
 
 exports.highlightAchievement = async (req, res) => {
   try {
-    const achievement = await Achievement.findByIdAndUpdate(req.params.id, {
-      isHighlighted: true, highlightedBy: req.user.id
-    }, { new: true });
+    const achievement = await Achievement.findByIdAndUpdate(
+      req.params.id,
+      { isHighlighted: true, highlightedBy: req.user.id },
+      { new: true }
+    )
+      .populate('user', 'name profileImage department role')
+      .populate('club', 'name logo')
+      .populate('comments.author', 'name profileImage');
     if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found' });
     await Notification.create({
-      user: achievement.user,
-      title: 'Achievement Highlighted',
-      message: `Your achievement "${achievement.title}" has been highlighted by an admin`,
+      user: achievement.user._id || achievement.user,
+      title: 'Achievement Highlighted! 🏆',
+      message: `Your achievement "${achievement.title}" has been highlighted on the campus showcase!`,
       type: 'achievement',
       referenceId: achievement._id,
-      referenceModel: 'Achievement'
+      referenceModel: 'Achievement',
     });
     res.status(200).json({ success: true, data: achievement });
   } catch (err) {
@@ -135,33 +158,41 @@ exports.highlightAchievement = async (req, res) => {
 
 exports.getTopAchievers = async (req, res) => {
   try {
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const topAchievers = await Achievement.aggregate([
-      { $match: { createdAt: { $gte: oneWeekAgo } } },
       {
         $addFields: {
-          engagement: { $add: [{ $size: '$likes' }, { $size: '$comments' }] }
-        }
+          likesCount: { $size: { $ifNull: ['$likes', []] } },
+          commentsCount: { $size: { $ifNull: ['$comments', []] } },
+        },
       },
-      { $sort: { engagement: -1 } },
-      { $limit: 10 },
+      {
+        $addFields: {
+          engagement: { $add: ['$likesCount', '$commentsCount'] },
+        },
+      },
+      { $sort: { isHighlighted: -1, engagement: -1, createdAt: -1 } },
+      { $limit: 6 },
       {
         $lookup: {
           from: 'users',
           localField: 'user',
           foreignField: '_id',
-          as: 'userData'
-        }
+          as: 'userData',
+        },
       },
-      { $unwind: '$userData' },
+      { $unwind: { path: '$userData', preserveNullAndEmptyArrays: true } },
       {
         $project: {
-          title: 1, engagement: 1, createdAt: 1,
+          title: 1,
+          engagement: 1,
+          badge: 1,
+          isHighlighted: 1,
+          createdAt: 1,
           userName: '$userData.name',
           userProfile: '$userData.profileImage',
-          userDept: '$userData.department'
-        }
-      }
+          userDept: '$userData.department',
+        },
+      },
     ]);
     res.status(200).json({ success: true, data: topAchievers });
   } catch (err) {

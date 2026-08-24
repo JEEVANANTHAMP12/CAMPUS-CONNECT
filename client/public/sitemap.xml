@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- Homepage & Portal Dashboard -->
+  <url>
+    <loc>https://mkce.ac.in/</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Campus Clubs & Student Chapters -->
+  <url>
+    <loc>https://mkce.ac.in/clubs</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Upcoming Campus Events & Symposiums -->
+  <url>
+    <loc>https://mkce.ac.in/events</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Career Opportunities & Placement Drives -->
+  <url>
+    <loc>https://mkce.ac.in/jobs</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Hall of Fame & Student Achievements -->
+  <url>
+    <loc>https://mkce.ac.in/achievements</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Engineering Discussion Forums -->
+  <url>
+    <loc>https://mkce.ac.in/discussions</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>always</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Student & Faculty Sign In -->
+  <url>
+    <loc>https://mkce.ac.in/login</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- New Student Registration -->
+  <url>
+    <loc>https://mkce.ac.in/register</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

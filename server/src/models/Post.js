@@ -5,10 +5,13 @@ const PostSchema = new mongoose.Schema(
     title: {
       type: String,
       required: [true, 'Please add a post title'],
+      trim: true,
+      maxlength: 200,
     },
     content: {
       type: String,
       required: [true, 'Please add post content'],
+      trim: true,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,10 +24,12 @@ const PostSchema = new mongoose.Schema(
     },
     department: {
       type: String,
+      trim: true,
     },
     boardType: {
       type: String,
-      enum: ['club', 'department', 'general'],
+      enum: ['general', 'department', 'club', 'career', 'anonymous'],
+      default: 'general',
     },
     media: [
       {
@@ -45,6 +50,8 @@ const PostSchema = new mongoose.Schema(
         },
         content: {
           type: String,
+          required: true,
+          trim: true,
         },
         createdAt: {
           type: Date,
@@ -69,5 +76,9 @@ const PostSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+PostSchema.index({ createdAt: -1, boardType: 1 });
+PostSchema.index({ club: 1, createdAt: -1 });
+PostSchema.index({ isReported: 1 });
 
 module.exports = mongoose.model('Post', PostSchema);

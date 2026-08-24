@@ -34,4 +34,7 @@ const MessageSchema = new mongoose.Schema(
   }
 );
 
+MessageSchema.index({ sender: 1, receiver: 1, createdAt: -1 });
+MessageSchema.index({ club: 1, createdAt: 1 });
+
 module.exports = mongoose.model('Message', MessageSchema);

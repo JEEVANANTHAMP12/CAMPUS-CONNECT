@@ -1,0 +1,22 @@
+# Robots.txt for MKCE Connect - M. Kumarasamy College of Engineering
+# https://mkce.ac.in
+
+User-agent: *
+Allow: /
+Allow: /clubs
+Allow: /events
+Allow: /jobs
+Allow: /achievements
+Allow: /discussions
+Allow: /login
+Allow: /register
+
+# Disallow private user sessions and admin endpoints
+Disallow: /admin
+Disallow: /messages/
+Disallow: /api/
+Disallow: /uploads/private/
+
+# Host and Sitemap
+Host: https://mkce.ac.in
+Sitemap: https://mkce.ac.in/sitemap.xml

@@ -63,4 +63,7 @@ const EventSchema = new mongoose.Schema(
   }
 );
 
+EventSchema.index({ date: 1, isApproved: 1 });
+EventSchema.index({ club: 1, date: 1 });
+
 module.exports = mongoose.model('Event', EventSchema);

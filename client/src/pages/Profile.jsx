@@ -2,20 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import {
-  User,
-  Mail,
-  Building2,
-  BookOpen,
-  Award,
-  Briefcase,
-  Edit3,
-  Save,
-  X,
-  Trophy,
-  Sparkles,
-} from 'lucide-react';
+import { User, Mail, Building2, BookOpen, Award, Briefcase, Edit3, Save, X, Trophy, Sparkles, ShieldCheck, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { triggerConfetti } from '../components/animations/Confetti';
+import SEO from '../components/SEO';
 
 export default function Profile() {
   const { id } = useParams();
@@ -30,9 +21,7 @@ export default function Profile() {
   const targetId = id || user?.id;
   const isOwn = user?.id === targetId;
 
-  useEffect(() => {
-    fetchProfile();
-  }, [targetId]);
+  useEffect(() => { fetchProfile(); }, [targetId]);
 
   const fetchProfile = async () => {
     try {
@@ -42,45 +31,32 @@ export default function Profile() {
       ]);
       setProfile(profileRes.data.data);
       setForm(profileRes.data.data);
-      setAchievements(achRes.data.data);
-    } catch (err) {
-      toast.error('Failed to load profile');
-    }
+      setAchievements(achRes.data.data || []);
+    } catch { toast.error('Failed to load profile'); }
     setLoading(false);
   };
 
   const saveProfile = async () => {
     setSaving(true);
     try {
-      await updateProfile({
-        name: form.name,
-        department: form.department,
-        year: form.year,
-        skills: form.skills,
-        bio: form.bio,
-      });
+      await updateProfile({ name: form.name, department: form.department, year: form.year, skills: form.skills, bio: form.bio });
+      triggerConfetti({ particleCount: 50, spread: 60 });
       setEditing(false);
       toast.success('Profile updated successfully!');
       fetchProfile();
-    } catch (err) {
-      toast.error('Failed to update profile');
-    }
+    } catch { toast.error('Failed to update profile'); }
     setSaving(false);
   };
 
-  const cancelEdit = () => {
-    setForm(profile);
-    setEditing(false);
-  };
-
-  const getInitial = (name) => (name ? name.charAt(0).toUpperCase() : '?');
+  const cancelEdit = () => { setForm(profile); setEditing(false); };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-3 border-mkce-200 border-t-mkce-600 rounded-full animate-spin"></div>
-          <p className="text-sm text-surface-400 font-medium">Loading profile...</p>
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="skeleton rounded-3xl h-52" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="skeleton rounded-3xl h-72" />
+          <div className="space-y-6"><div className="skeleton rounded-3xl h-36" /><div className="skeleton rounded-3xl h-40" /></div>
         </div>
       </div>
     );
@@ -88,75 +64,54 @@ export default function Profile() {
 
   if (!profile) {
     return (
-      <div className="card p-12 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-surface-100 flex items-center justify-center">
-          <User size={32} className="text-surface-400" />
+      <div className="card-premium p-12 text-center max-w-lg mx-auto">
+        <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-100 flex items-center justify-center text-surface-400">
+          <User size={32} />
         </div>
-        <h3 className="section-title text-surface-700 mb-1">Profile not found</h3>
-        <p className="text-surface-500 text-sm">The profile you're looking for doesn't exist.</p>
+        <h3 className="font-display font-bold text-mkce-900 text-lg">Profile Not Found</h3>
+        <p className="text-surface-500 text-sm mt-1">The user profile does not exist or has been disabled.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in">
-      <div className="card overflow-hidden">
-        <div className="h-36 bg-mkce-gradient relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gold-500/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-mkce-950/30 to-transparent"></div>
+    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+      <SEO title={`${profile.name} - Engineer Profile`} description={`View ${profile.name}'s engineering profile, skills, achievements, and activities at MKCE.`} keywords={`MKCE ${profile.name}, ${profile.department || 'MKCE'} Student, Engineering Portfolio`} canonical={`/profile/${targetId}`} />
+
+      {/* Premium Profile Hero */}
+      <div className="card-premium overflow-hidden">
+        <div className="h-44 sm:h-52 relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #010018 0%, #020024 20%, #09203f 45%, #073f69 70%, #06A3DA 95%, #60bbfa 100%)' }}>
+          <div className="absolute inset-0 bg-white/[0.03]" />
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white/[0.04] rounded-full blur-[80px]" />
+          <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-gold/8 rounded-full blur-[60px] pointer-events-none" />
         </div>
-        <div className="px-6 pb-6">
-          <div className="flex items-end gap-5 -mt-14 relative z-10">
-            <div className="w-28 h-28 bg-white rounded-2xl border-4 border-white shadow-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-4xl font-display font-bold text-mkce-600">
-                {getInitial(profile.name)}
-              </span>
-            </div>
-            <div className="flex-1 pb-1 min-w-0">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-display font-bold text-surface-900">
-                  {profile.name}
-                </h1>
-                <span className="badge-primary capitalize">{profile.role}</span>
+        <div className="px-8 pb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 -mt-16 sm:-mt-20 relative z-10">
+            <div className="flex items-end gap-5">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl border-4 border-white shadow-2xl flex items-center justify-center font-display font-black text-4xl text-white flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)', boxShadow: '0 8px 32px rgba(6,163,218,0.3)' }}>
+                {profile.name?.charAt(0) || 'U'}
               </div>
-              <div className="flex items-center gap-2 mt-1 text-surface-500">
-                <Mail size={14} />
-                <span className="text-sm">{profile.email}</span>
+              <div className="pb-1">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h1 className="text-2xl sm:text-3xl font-display font-black text-mkce-900 tracking-tight">{profile.name}</h1>
+                  <span className="badge-blue capitalize text-xs">{profile.role || 'Student'}</span>
+                </div>
+                <div className="flex items-center gap-2 mt-1 text-xs text-surface-500">
+                  <Mail size={13} className="text-mkce-500" /><span>{profile.email}</span>
+                </div>
               </div>
             </div>
             {isOwn && (
-              <div className="flex-shrink-0 pb-1">
+              <div className="self-start sm:self-auto">
                 {editing ? (
                   <div className="flex gap-2">
-                    <button
-                      onClick={saveProfile}
-                      disabled={saving}
-                      className="btn-primary flex items-center gap-1.5 text-sm py-2"
-                    >
-                      {saving ? (
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      ) : (
-                        <Save size={16} />
-                      )}
-                      Save
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="btn-secondary flex items-center gap-1.5 text-sm py-2"
-                    >
-                      <X size={16} />
-                      Cancel
-                    </button>
+                    <button onClick={saveProfile} disabled={saving} className="btn-mkce text-xs px-4 py-2.5 font-bold"><Save size={14} /><span>Save</span></button>
+                    <button onClick={cancelEdit} className="btn-secondary text-xs px-4 py-2.5 font-bold"><X size={14} /><span>Cancel</span></button>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => setEditing(true)}
-                    className="btn-secondary flex items-center gap-1.5 text-sm py-2"
-                  >
-                    <Edit3 size={16} />
-                    Edit Profile
-                  </button>
+                  <button onClick={() => setEditing(true)} className="btn-secondary text-xs px-4 py-2.5 font-bold flex items-center gap-1.5"><Edit3 size={14} /><span>Edit Profile</span></button>
                 )}
               </div>
             )}
@@ -164,202 +119,67 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="card p-6">
-          <h2 className="section-title flex items-center gap-2 mb-5">
-            <User size={18} className="text-mkce-500" />
-            Details
-          </h2>
-          <div className="space-y-4">
-            {editing ? (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    value={form.name || ''}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="input-field"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Department
-                  </label>
-                  <input
-                    type="text"
-                    value={form.department || ''}
-                    onChange={(e) =>
-                      setForm({ ...form, department: e.target.value })
-                    }
-                    className="input-field"
-                    placeholder="e.g. Computer Science"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Year
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="4"
-                    value={form.year || ''}
-                    onChange={(e) => setForm({ ...form, year: e.target.value })}
-                    className="input-field"
-                    placeholder="1-4"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Bio
-                  </label>
-                  <textarea
-                    value={form.bio || ''}
-                    onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                    className="input-field resize-none"
-                    placeholder="Tell us about yourself..."
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-surface-700 mb-1.5">
-                    Skills (comma separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={form.skills?.join(', ') || ''}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        skills: e.target.value
-                          .split(',')
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                      })
-                    }
-                    className="input-field"
-                    placeholder="React, Node.js, Python"
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
-                  <div className="w-9 h-9 bg-mkce-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Building2 size={16} className="text-mkce-600" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs text-surface-400 font-medium">Department</p>
-                    <p className="text-sm text-surface-800 truncate">
-                      {profile.department || 'Not specified'}
-                    </p>
-                  </div>
-                </div>
-                {profile.year && (
-                  <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
-                    <div className="w-9 h-9 bg-mkce-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <BookOpen size={16} className="text-mkce-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-surface-400 font-medium">Year</p>
-                      <p className="text-sm text-surface-800">Year {profile.year}</p>
-                    </div>
-                  </div>
-                )}
-                {profile.bio && (
-                  <div className="p-3 bg-surface-50 rounded-xl">
-                    <p className="text-xs text-surface-400 font-medium mb-1">Bio</p>
-                    <p className="text-sm text-surface-700 leading-relaxed">{profile.bio}</p>
-                  </div>
-                )}
-                {!profile.department && !profile.year && !profile.bio && (
-                  <p className="text-sm text-surface-400 text-center py-4">
-                    No details added yet
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="card p-6">
-          <h2 className="section-title flex items-center gap-2 mb-5">
-            <Sparkles size={18} className="text-gold-500" />
-            Skills
-          </h2>
-          {profile.skills?.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {profile.skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1.5 bg-mkce-50 text-mkce-700 text-sm font-medium rounded-lg"
-                >
-                  {skill}
-                </span>
-              ))}
+        {/* Academic Info */}
+        <div className="card-premium p-6 sm:p-7">
+          <h2 className="section-heading flex items-center gap-2 mb-5"><User size={18} className="text-mkce-500" />Academic Information</h2>
+          {editing ? (
+            <div className="space-y-4">
+              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Full Name</label><input type="text" value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-mkce" /></div>
+              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Department</label><input type="text" value={form.department || ''} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-mkce" /></div>
+              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Year of Study</label><input type="number" value={form.year || ''} onChange={(e) => setForm({ ...form, year: e.target.value })} className="input-mkce" min="1" max="5" /></div>
+              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Bio / About Me</label><textarea value={form.bio || ''} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="input-mkce resize-none" rows={3} /></div>
             </div>
           ) : (
-            <p className="text-sm text-surface-400 text-center py-4">No skills added yet</p>
+            <div className="space-y-3">
+              {[
+                { icon: Building2, label: 'Department', value: profile.department || 'Not specified' },
+                profile.year && { icon: BookOpen, label: 'Year of Study', value: `Year ${profile.year}` },
+              ].filter(Boolean).map((item, i) => (
+                <div key={i} className="p-4 rounded-2xl flex items-center gap-3" style={{ background: 'rgba(248,250,252,0.6)', border: '1px solid rgba(226,232,240,0.4)' }}>
+                  <div className="w-10 h-10 rounded-xl bg-mkce-50 flex items-center justify-center text-mkce-600"><item.icon size={18} /></div>
+                  <div><p className="text-[10px] text-surface-400 font-bold uppercase tracking-wider">{item.label}</p><p className="text-sm font-bold text-mkce-900">{item.value}</p></div>
+                </div>
+              ))}
+              {profile.bio && (
+                <div className="p-4 rounded-2xl" style={{ background: 'rgba(248,250,252,0.6)', border: '1px solid rgba(226,232,240,0.4)' }}>
+                  <p className="text-[10px] text-surface-400 font-bold uppercase tracking-wider mb-1">About</p>
+                  <p className="text-xs sm:text-sm text-surface-700 leading-relaxed">{profile.bio}</p>
+                </div>
+              )}
+            </div>
           )}
         </div>
+
+        {/* Verified Status & Skills */}
+        <div className="space-y-6">
+          <div className="rounded-3xl p-6 text-white flex items-center justify-between transition-all duration-300 hover:-translate-y-1"
+            style={{ background: 'linear-gradient(135deg, #020024 0%, #09203f 35%, #073f69 70%, #06A3DA 100%)', boxShadow: '0 8px 24px -4px rgba(6,163,218,0.25)' }}>
+            <div>
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', color: '#f9d423' }}>Campus Verified</span>
+              <h3 className="text-xl font-display font-black mt-2">Verified Member</h3>
+              <p className="text-xs text-mkce-200/70 mt-1 max-w-[200px]">Active student on the MKCE digital network.</p>
+            </div>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-gold" style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(247,206,88,0.2)' }}>
+              <ShieldCheck size={36} />
+            </div>
+          </div>
+
+          <div className="card-premium p-6">
+            <h2 className="section-heading flex items-center gap-2 mb-4"><Sparkles size={18} className="text-amber-500" />Verified Skills & Stacks</h2>
+            {profile.skills?.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {profile.skills.map((skill, i) => (
+                  <span key={i} className="px-3.5 py-1.5 rounded-xl bg-mkce-50 text-mkce-700 text-xs font-bold border border-mkce-200/60">{skill}</span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-surface-400">No skills added yet.</p>
+            )}
+          </div>
+        </div>
       </div>
-
-      {profile.clubs?.length > 0 && (
-        <div className="card p-6">
-          <h2 className="section-title flex items-center gap-2 mb-5">
-            <Briefcase size={18} className="text-mkce-500" />
-            Clubs Joined
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            {profile.clubs.map((club) => (
-              <div
-                key={club._id || club}
-                className="flex items-center gap-2.5 bg-surface-50 px-4 py-2.5 rounded-xl border border-surface-100"
-              >
-                <div className="w-8 h-8 bg-mkce-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-mkce-700 font-semibold text-xs">
-                    {club.name?.charAt(0)?.toUpperCase()}
-                  </span>
-                </div>
-                <span className="text-sm font-medium text-surface-800">{club.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {achievements.length > 0 && (
-        <div className="card p-6">
-          <h2 className="section-title flex items-center gap-2 mb-5">
-            <Trophy size={18} className="text-gold-500" />
-            Achievements
-          </h2>
-          <div className="space-y-3">
-            {achievements.map((ach) => (
-              <div
-                key={ach._id}
-                className="flex items-start gap-3 p-4 bg-gold-50 rounded-xl border border-gold-100/50"
-              >
-                <div className="w-10 h-10 bg-gold-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Trophy size={18} className="text-gold-600" />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="font-semibold text-surface-900">{ach.title}</h4>
-                  {ach.description && (
-                    <p className="text-sm text-surface-500 mt-0.5 leading-relaxed">
-                      {ach.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

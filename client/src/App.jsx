@@ -20,7 +20,7 @@ function PrivateRoute({ children }) {
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-white">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 rounded-xl flex items-center justify-center font-display font-bold text-2xl text-white"
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-bold text-2xl text-white shadow-glow"
           style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' }}>
           MK
         </div>
@@ -63,7 +63,7 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -71,11 +71,12 @@ export default function App() {
             style: {
               background: '#09203f',
               color: '#f8fafc',
-              borderRadius: '10px',
-              padding: '12px 16px',
+              borderRadius: '12px',
+              padding: '12px 18px',
               fontSize: '13px',
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: '500',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
             },
             success: { iconTheme: { primary: '#06A3DA', secondary: '#f8fafc' } },
             error: { iconTheme: { primary: '#ef4444', secondary: '#f8fafc' } },

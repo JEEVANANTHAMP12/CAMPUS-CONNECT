@@ -1,13 +1,18 @@
+const env = require('../config/env');
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    httpOnly: true
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
   };
 
-  if (process.env.NODE_ENV === 'production') {
+  if (env.isProd) {
     options.secure = true;
+    options.sameSite = 'strict';
   }
 
   res
@@ -22,8 +27,11 @@ const sendTokenResponse = (user, statusCode, res) => {
         email: user.email,
         role: user.role,
         department: user.department,
-        profileImage: user.profileImage
-      }
+        year: user.year,
+        profileImage: user.profileImage,
+        skills: user.skills,
+        bio: user.bio,
+      },
     });
 };
 
