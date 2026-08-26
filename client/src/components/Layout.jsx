@@ -6,7 +6,8 @@ import {
   Home, Users, Calendar, MessageSquare, Briefcase, Trophy,
   MessageCircle, Shield, Bell, Menu, X, LogOut, Search,
   Zap, CheckCircle, Sparkles, ShieldCheck, GraduationCap,
-  ChevronRight, Command, User as UserIcon, PlusCircle, Check
+  ChevronRight, Command, User as UserIcon, PlusCircle, Check,
+  PanelLeftClose, PanelLeft, ChevronsLeft, ChevronsRight
 } from 'lucide-react';
 import api from '../utils/api';
 import socket from '../utils/socket';
@@ -251,37 +252,64 @@ export default function Layout() {
       <aside
         id="sidebar-navigation"
         aria-label="Main Platform Navigation"
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[270px] flex flex-col bg-white border-r border-zinc-200 transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+        className={`fixed lg:static inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-zinc-200 transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${sidebarExpanded ? 'w-[270px] lg:w-[270px]' : 'w-[270px] lg:w-[72px]'}
           ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Brand Header */}
-        <div className="px-5 py-4 border-b border-zinc-200 relative overflow-hidden bg-white">
-          <Link
-            to="/"
-            className="flex items-center gap-3 relative z-10 group"
-          >
-            <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-xl text-white bg-black border border-zinc-800 transition-all duration-200 group-hover:bg-zinc-800"
-              style={{
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-              }}
-            >
-              MK
+        <div className={`border-b border-zinc-200 relative overflow-hidden bg-white transition-all ${sidebarExpanded ? 'px-5 py-4' : 'px-3 py-4 flex flex-col items-center gap-3'}`}>
+          {sidebarExpanded ? (
+            <div className="flex items-center justify-between w-full">
+              <Link
+                to="/"
+                className="flex items-center gap-3 relative z-10 group"
+              >
+                <div
+                  className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-xl text-white bg-black border border-zinc-800 transition-all duration-200 group-hover:bg-zinc-800"
+                  style={{
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  }}
+                >
+                  MK
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-black text-black text-[15px] tracking-tight transition-colors">
+                      MKCE Connect
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-black shadow-xs" />
+                  </div>
+                  <p className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase">M. Kumarasamy College</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-zinc-100 text-black font-bold border border-zinc-200">NAAC 'A'</span>
+                    <span className="text-[9px] text-zinc-500">Autonomous</span>
+                  </div>
+                </div>
+              </Link>
+              <button
+                onClick={() => setSidebarExpanded(false)}
+                className="hidden lg:flex p-2 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-xl transition-colors"
+                aria-label="Collapse sidebar"
+                title="Collapse sidebar"
+              >
+                <PanelLeftClose size={18} />
+              </button>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-display font-black text-black text-[15px] tracking-tight transition-colors">
-                  MKCE Connect
-                </span>
-                <span className="w-2 h-2 rounded-full bg-black shadow-xs" />
-              </div>
-              <p className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase">M. Kumarasamy College</p>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-zinc-100 text-black font-bold border border-zinc-200">NAAC 'A'</span>
-                <span className="text-[9px] text-zinc-500">Autonomous</span>
-              </div>
-            </div>
-          </Link>
+          ) : (
+            <>
+              <Link to="/" className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-xl text-white bg-black border border-zinc-800 shrink-0" title="MKCE Connect">
+                MK
+              </Link>
+              <button
+                onClick={() => setSidebarExpanded(true)}
+                className="hidden lg:flex p-2 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-xl transition-colors"
+                aria-label="Expand sidebar"
+                title="Expand sidebar"
+              >
+                <PanelLeft size={18} />
+              </button>
+            </>
+          )}
 
           <button
             onClick={() => setSidebarOpen(false)}
@@ -293,8 +321,12 @@ export default function Layout() {
 
         {/* Navigation Links */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-thin bg-white" aria-label="Sidebar Menu">
-          <div className="px-3 mb-2 mt-1 flex items-center gap-1.5">
-            <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">Platform</span>
+          <div className={`mb-2 mt-1 flex items-center gap-1.5 ${sidebarExpanded ? 'px-3' : 'justify-center'}`}>
+            {sidebarExpanded ? (
+              <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">Platform</span>
+            ) : (
+              <span className="w-6 h-px bg-zinc-200" />
+            )}
           </div>
 
           {navItems.map((item) => {
@@ -305,12 +337,14 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                title={!sidebarExpanded ? item.label : undefined}
+                className={`relative flex items-center rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                  ${sidebarExpanded ? 'gap-3 px-3 py-2.5' : 'justify-center p-2.5 mx-auto w-11 h-11'}
                   ${active ? 'text-white bg-black shadow-xs' : 'text-zinc-600 hover:text-black hover:bg-zinc-100'}`}
                 onClick={() => setSidebarOpen(false)}
               >
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 shrink-0
                     ${active
                       ? 'bg-zinc-800 text-white'
                       : 'text-zinc-500 group-hover:text-black'
@@ -318,10 +352,15 @@ export default function Layout() {
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.8} />
                 </div>
-                <span className="truncate">{item.label}</span>
+                {sidebarExpanded && <span className="truncate">{item.label}</span>}
 
-                {item.path === '/messages' && unreadCount > 0 && (
+                {sidebarExpanded && item.path === '/messages' && unreadCount > 0 && (
                   <span className="ml-auto px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full border border-white/20">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+                {!sidebarExpanded && item.path === '/messages' && unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-black text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -331,8 +370,12 @@ export default function Layout() {
 
           <div className="my-3 mx-3 h-px bg-zinc-200" />
 
-          <div className="px-3 mb-2 flex items-center gap-1.5">
-            <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">{roleNav.title}</span>
+          <div className={`mb-2 flex items-center gap-1.5 ${sidebarExpanded ? 'px-3' : 'justify-center'}`}>
+            {sidebarExpanded ? (
+              <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">{roleNav.title}</span>
+            ) : (
+              <roleNav.icon size={14} className="text-zinc-400" />
+            )}
           </div>
 
           {roleNav.items.map((item) => {
@@ -343,12 +386,14 @@ export default function Layout() {
                 key={item.label}
                 to={item.path}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                title={!sidebarExpanded ? item.label : undefined}
+                className={`relative flex items-center rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                  ${sidebarExpanded ? 'gap-3 px-3 py-2.5' : 'justify-center p-2.5 mx-auto w-11 h-11'}
                   ${active ? 'text-white bg-black shadow-xs' : 'text-zinc-600 hover:text-black hover:bg-zinc-100'}`}
                 onClick={() => setSidebarOpen(false)}
               >
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 shrink-0
                     ${active
                       ? 'bg-zinc-800 text-white'
                       : 'text-zinc-500 group-hover:text-black'
@@ -356,8 +401,8 @@ export default function Layout() {
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.8} />
                 </div>
-                <span className="truncate">{item.label}</span>
-                {item.badge && (
+                {sidebarExpanded && <span className="truncate">{item.label}</span>}
+                {sidebarExpanded && item.badge && (
                   <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-md border ${
                     active ? 'bg-zinc-800 text-white border-zinc-700' : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                   }`}>
@@ -370,30 +415,41 @@ export default function Layout() {
         </nav>
 
         {/* User Profile Card */}
-        <div className="p-3 border-t border-zinc-200 bg-zinc-50/70">
-          <Link
-            to="/profile"
-            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-zinc-200/60 transition-all group"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm bg-black border border-zinc-800 group-hover:scale-105 transition-transform"
+        <div className={`border-t border-zinc-200 bg-zinc-50/70 ${sidebarExpanded ? 'p-3' : 'p-2 flex justify-center'}`}>
+          {sidebarExpanded ? (
+            <Link
+              to="/profile"
+              className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-zinc-200/60 transition-all group"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm bg-black border border-zinc-800 group-hover:scale-105 transition-transform shrink-0"
+              >
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-bold text-zinc-900 truncate group-hover:text-black transition-colors">
+                  {user?.name || 'Authenticated User'}
+                </p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
+                  <span className="text-[11px] text-zinc-500 truncate font-medium">
+                    {roleInfo.label}
+                  </span>
+                </div>
+              </div>
+              <ChevronRight size={15} className="text-zinc-400 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
+            </Link>
+          ) : (
+            <Link
+              to="/profile"
+              title={user?.name || 'Profile'}
+              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm bg-black border border-zinc-800 hover:scale-105 transition-transform"
+              onClick={() => setSidebarOpen(false)}
             >
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-bold text-zinc-900 truncate group-hover:text-black transition-colors">
-                {user?.name || 'Authenticated User'}
-              </p>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
-                <span className="text-[11px] text-zinc-500 truncate font-medium">
-                  {roleInfo.label}
-                </span>
-              </div>
-            </div>
-            <ChevronRight size={15} className="text-zinc-400 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
-          </Link>
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -411,6 +467,14 @@ export default function Layout() {
               aria-label="Open navigation sidebar"
             >
               <Menu size={22} />
+            </button>
+            <button
+              onClick={() => setSidebarExpanded(!sidebarExpanded)}
+              className="hidden lg:flex p-2 rounded-xl hover:bg-zinc-100 text-zinc-700 transition-colors"
+              aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+              title={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+            >
+              {sidebarExpanded ? <PanelLeftClose size={20} /> : <PanelLeft size={20} />}
             </button>
 
             <button
