@@ -34,3 +34,13 @@ create table notifications (id uuid primary key default gen_random_uuid(), user_
 create index users_department_role_idx on users(department,role); create index events_date_approved_idx on events(date,is_approved); create index posts_created_idx on posts(is_pinned desc,created_at desc); create index jobs_deadline_verified_idx on jobs(deadline,is_verified); create index messages_direct_idx on messages(sender,receiver,created_at desc); create index notifications_user_idx on notifications(user_id,is_read,created_at desc);
 -- This backend exclusively uses the service-role key. Do not expose it to clients.
 alter table users enable row level security; alter table clubs enable row level security; alter table club_members enable row level security; alter table events enable row level security; alter table event_attendees enable row level security; alter table posts enable row level security; alter table post_likes enable row level security; alter table post_comments enable row level security; alter table jobs enable row level security; alter table job_applications enable row level security; alter table achievements enable row level security; alter table achievement_likes enable row level security; alter table achievement_comments enable row level security; alter table messages enable row level security; alter table notifications enable row level security;
+
+-- Grant privileges to service_role (fixes 42501 permission denied). Must be after table creation.
+-- Supabase PostgREST requires explicit GRANTs even for service_role when tables are created via SQL.
+grant usage on schema public to service_role, anon, authenticated;
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+grant all on all functions in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
+alter default privileges in schema public grant all on functions to service_role;
