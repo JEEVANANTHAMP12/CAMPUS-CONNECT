@@ -140,8 +140,11 @@ server.on('error', (err) => {
   }
 });
 
+const initKeepAlive = require('./utils/keepAlive');
+
 server.listen(PORT, () => {
   logger.info(`Enterprise Server running in ${env.nodeEnv} mode on port ${PORT}`);
+  initKeepAlive();
 });
 
 // Graceful shutdown handling
