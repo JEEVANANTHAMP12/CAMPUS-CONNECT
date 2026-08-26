@@ -8,7 +8,7 @@ import { triggerConfetti } from '../components/animations/Confetti';
 import SEO from '../components/SEO';
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', department: '', year: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', department: '', year: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -104,8 +104,11 @@ export default function Register() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-display font-black text-black tracking-tight">Create an Account</h2>
-            <p className="text-zinc-500 text-sm mt-1 font-medium">Join the student & faculty digital network.</p>
+            <h2 className="text-2xl font-display font-black text-black tracking-tight">Create Student Account</h2>
+            <p className="text-zinc-500 text-sm mt-1 font-medium">Student registration only — staff & HOD accounts are created by admin.</p>
+            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold">
+              <ShieldCheck size={12} /> Student Registration
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -130,22 +133,12 @@ export default function Register() {
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5">Role</label>
-                <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="input-mkce cursor-pointer font-medium">
-                  <option value="student">Student</option>
-                  <option value="faculty">Faculty</option>
-                  <option value="leader">Club Leader</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5">Year</label>
-                <select value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} className="input-mkce cursor-pointer font-medium">
-                  <option value="">Select Year</option>
-                  <option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option>
-                </select>
-              </div>
+            <div>
+              <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5">Year</label>
+              <select value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} className="input-mkce cursor-pointer font-medium">
+                <option value="">Select Year</option>
+                <option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option>
+              </select>
             </div>
             <div>
               <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5">Department</label>

@@ -8,9 +8,11 @@ const env = require('../config/env');
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password, department, year, skills } = req.body;
+  // Register is student-only: ignore any client role and force student
+  if (!name || !email || !password) throw ApiError.badRequest('Name, email and password are required');
   if (await maybeOne(supabase.from('users').select('id').eq('email', String(email).toLowerCase()))) throw ApiError.conflict('User already exists');
   const hash = await bcrypt.hash(password, env.bcryptRounds);
-  const user = publicUser(await one(supabase.from('users').insert({ name, email: String(email).toLowerCase(), password: hash, role: req.body.role === 'student' ? 'student' : 'student', department, year, skills: Array.isArray(skills) ? skills.slice(0, 20) : [] }).select()));
+  const user = publicUser(await one(supabase.from('users').insert({ name, email: String(email).toLowerCase(), password: hash, role: 'student', department: department || null, year: year ? Number(year) : null, skills: Array.isArray(skills) ? skills.slice(0, 20) : [] }).select()));
   sendTokenResponse(user, 201, res);
 });
 exports.login = asyncHandler(async (req, res) => {
