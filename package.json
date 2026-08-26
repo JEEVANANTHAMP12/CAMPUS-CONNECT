@@ -2,15 +2,22 @@
   "name": "campus-connect",
   "version": "1.0.0",
   "description": "Campus Connect - One-stop platform for students, clubs, and departments",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
+    "vercel-build": "cd client && npm install && npm run build",
     "install-all": "cd server && npm install && cd ../client && npm install"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
   }
 }
+
+
