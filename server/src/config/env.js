@@ -2,6 +2,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(__dirname, '../../server/.env') });
 
 const required = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'JWT_SECRET'];
 
