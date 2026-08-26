@@ -109,6 +109,7 @@ app.use('/api/achievements', require('./routes/achievements'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/stats', require('./routes/stats'));
 
 // Root fallback when frontend is not served by backend
 app.get('/', (req, res, next) => {

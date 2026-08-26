@@ -25,17 +25,17 @@ export default function Dashboard() {
         const [eventsRes, achievementsRes, statsRes] = await Promise.all([
           api.get('/events?upcoming=true&limit=5'),
           api.get('/achievements?limit=5'),
-          api.get('/admin/stats').catch(() => null),
+          api.get('/stats').catch(() => null),
         ]);
         setRecentEvents(eventsRes.data.data || []);
         setRecentAchievements(achievementsRes.data.data || []);
         if (statsRes?.data?.data) {
           setStats(statsRes.data.data);
         } else {
-          setStats({ totalUsers: 2450, totalClubs: 18, totalEvents: 42, totalJobs: 28 });
+          setStats({ totalUsers: 0, totalClubs: 0, totalEvents: 0, totalJobs: 0 });
         }
       } catch (err) {
-        setStats({ totalUsers: 2450, totalClubs: 18, totalEvents: 42, totalJobs: 28 });
+        setStats({ totalUsers: 0, totalClubs: 0, totalEvents: 0, totalJobs: 0 });
       }
       setLoading(false);
     };
@@ -121,10 +121,10 @@ export default function Dashboard() {
       {stats && (
         <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {[
-            { label: 'Active Students', value: stats.totalUsers || 2450, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
-            { label: 'Student Chapters', value: stats.totalClubs || 18, icon: Zap, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' },
-            { label: 'Live Events', value: stats.totalEvents || 42, icon: Calendar, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' },
-            { label: 'Opportunities', value: stats.totalJobs || 28, icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
+            { label: 'Active Students', value: stats.totalUsers ?? 0, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
+            { label: 'Student Chapters', value: stats.totalClubs ?? 0, icon: Zap, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' },
+            { label: 'Live Events', value: stats.totalEvents ?? 0, icon: Calendar, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' },
+            { label: 'Opportunities', value: stats.totalJobs ?? 0, icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
           ].map((item, i) => (
             <StaggerItem key={i}>
               <div className="card-premium p-5 group cursor-default">
