@@ -119,39 +119,39 @@ export default function Layout() {
       case 'admin':
         return {
           label: 'Super Admin', badge: 'Admin', icon: Shield,
-          color: 'from-rose-500/20 to-red-500/10 text-rose-300 border-rose-500/30',
+          color: 'text-rose-600',
           chipBg: 'bg-rose-50 border-rose-200 text-rose-700',
         };
       case 'hod':
         return {
           label: `HOD (${user?.department || 'Dept'})`, badge: 'HOD', icon: ShieldCheck,
-          color: 'from-amber-500/20 to-yellow-500/10 text-amber-300 border-amber-500/30',
-          chipBg: 'bg-amber-50 border-amber-200 text-amber-700',
+          color: 'text-purple-600',
+          chipBg: 'bg-purple-50 border-purple-200 text-purple-700',
         };
       case 'faculty':
         return {
           label: `Faculty (${user?.department || 'Dept'})`, badge: 'Faculty', icon: GraduationCap,
-          color: 'from-indigo-500/20 to-purple-500/10 text-indigo-300 border-indigo-500/30',
-          chipBg: 'bg-indigo-50 border-indigo-200 text-indigo-700',
+          color: 'text-blue-600',
+          chipBg: 'bg-blue-50 border-blue-200 text-blue-700',
         };
       case 'leader':
         return {
           label: 'Club Leader', badge: 'Lead', icon: Sparkles,
-          color: 'from-emerald-500/20 to-green-500/10 text-emerald-300 border-emerald-500/30',
-          chipBg: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+          color: 'text-amber-600',
+          chipBg: 'bg-amber-50 border-amber-200 text-amber-800',
         };
       case 'sub_leader':
         return {
           label: 'Club Sub-Leader', badge: 'Sub-Lead', icon: Zap,
-          color: 'from-teal-500/20 to-cyan-500/10 text-teal-300 border-teal-500/30',
-          chipBg: 'bg-teal-50 border-teal-200 text-teal-700',
+          color: 'text-indigo-600',
+          chipBg: 'bg-indigo-50 border-indigo-200 text-indigo-700',
         };
       case 'student':
       default:
         return {
           label: `Student (${user?.year ? `Year ${user.year}` : 'Student'})`, badge: 'Student', icon: Users,
-          color: 'from-mkce-500/20 to-cyan-500/10 text-mkce-300 border-mkce-500/30',
-          chipBg: 'bg-mkce-50 border-mkce-200 text-mkce-700',
+          color: 'text-zinc-600',
+          chipBg: 'bg-zinc-100 border-zinc-200 text-zinc-800',
         };
     }
   };
@@ -225,11 +225,11 @@ export default function Layout() {
   );
 
   return (
-    <div className="flex h-screen bg-surface-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-white overflow-hidden font-sans text-zinc-900">
       {/* Skip Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-mkce-600 focus:text-white focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white text-xs font-bold uppercase tracking-wider"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-black focus:text-white focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-black text-xs font-bold uppercase tracking-wider"
       >
         Skip to main content
       </a>
@@ -241,7 +241,7 @@ export default function Layout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -251,58 +251,50 @@ export default function Layout() {
       <aside
         id="sidebar-navigation"
         aria-label="Main Platform Navigation"
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[280px] flex flex-col transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[270px] flex flex-col bg-white border-r border-zinc-200 transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}`}
-        style={{
-          background: 'linear-gradient(180deg, #010018 0%, #020024 15%, #09203f 45%, #073f69 85%, #052642 100%)',
-          borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-        }}
       >
         {/* Brand Header */}
-        <div className="px-5 py-4 border-b border-white/[0.06] relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-mkce-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="px-5 py-4 border-b border-zinc-200 relative overflow-hidden bg-white">
           <Link
             to="/"
             className="flex items-center gap-3 relative z-10 group"
           >
             <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-xl text-white border border-white/15 transition-all duration-300 group-hover:scale-105 group-hover:border-white/25"
+              className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-xl text-white bg-black border border-zinc-800 transition-all duration-200 group-hover:bg-zinc-800"
               style={{
-                background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)',
-                boxShadow: '0 4px 16px rgba(6, 163, 218, 0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
               }}
             >
               MK
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-display font-extrabold text-white text-[15px] tracking-tight group-hover:text-mkce-300 transition-colors">
+                <span className="font-display font-black text-black text-[15px] tracking-tight transition-colors">
                   MKCE Connect
                 </span>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-black shadow-xs" />
               </div>
-              <p className="text-[10px] text-mkce-300/70 font-medium tracking-wider uppercase">M. Kumarasamy College</p>
+              <p className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase">M. Kumarasamy College</p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/[0.08] text-gold-light font-bold border border-white/[0.06]">NAAC 'A'</span>
-                <span className="text-[9px] text-white/40">Autonomous</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-zinc-100 text-black font-bold border border-zinc-200">NAAC 'A'</span>
+                <span className="text-[9px] text-zinc-500">Autonomous</span>
               </div>
             </div>
           </Link>
 
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 text-white/50 hover:text-white rounded-xl hover:bg-white/[0.06] absolute top-4 right-4"
+            className="lg:hidden p-2 text-zinc-500 hover:text-black rounded-xl hover:bg-zinc-100 absolute top-4 right-4"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto scrollbar-thin" aria-label="Sidebar Menu">
-          <div className="px-3 mb-2.5 mt-1 flex items-center gap-1.5">
-            <Sparkles size={10} className="text-mkce-400/70" />
-            <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.15em]">Platform</span>
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-thin bg-white" aria-label="Sidebar Menu">
+          <div className="px-3 mb-2 mt-1 flex items-center gap-1.5">
+            <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">Platform</span>
           </div>
 
           {navItems.map((item) => {
@@ -313,35 +305,23 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 group
-                  ${active ? 'text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/[0.04]'}`}
+                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                  ${active ? 'text-white bg-black shadow-xs' : 'text-zinc-600 hover:text-black hover:bg-zinc-100'}`}
                 onClick={() => setSidebarOpen(false)}
               >
-                {active && (
-                  <motion.div
-                    layoutId="activeSidebarPill"
-                    className="absolute inset-0 rounded-xl border border-mkce-400/25"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(6,163,218,0.15) 0%, rgba(6,163,218,0.05) 100%)',
-                      boxShadow: '0 0 20px rgba(6,163,218,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
-                    }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  />
-                )}
-
                 <div
-                  className={`relative z-10 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150
                     ${active
-                      ? 'bg-mkce-500/90 text-white shadow-[0_2px_8px_rgba(6,163,218,0.4)]'
-                      : 'bg-white/[0.04] text-white/45 group-hover:bg-white/[0.08] group-hover:text-white/70'
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-500 group-hover:text-black'
                     }`}
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.8} />
                 </div>
-                <span className="relative z-10 truncate">{item.label}</span>
+                <span className="truncate">{item.label}</span>
 
                 {item.path === '/messages' && unreadCount > 0 && (
-                  <span className="relative z-10 ml-auto px-2 py-0.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-black rounded-full shadow-sm animate-pulse">
+                  <span className="ml-auto px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full border border-white/20">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -349,11 +329,10 @@ export default function Layout() {
             );
           })}
 
-          <div className="my-3 mx-3 h-px bg-white/[0.06]" />
+          <div className="my-3 mx-3 h-px bg-zinc-200" />
 
-          <div className="px-3 mb-2.5 flex items-center gap-1.5">
-            <roleNav.icon size={10} className="text-gold/70" />
-            <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.15em]">{roleNav.title}</span>
+          <div className="px-3 mb-2 flex items-center gap-1.5">
+            <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-[0.15em]">{roleNav.title}</span>
           </div>
 
           {roleNav.items.map((item) => {
@@ -364,33 +343,24 @@ export default function Layout() {
                 key={item.label}
                 to={item.path}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 group
-                  ${active ? 'text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/[0.04]'}`}
+                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group
+                  ${active ? 'text-white bg-black shadow-xs' : 'text-zinc-600 hover:text-black hover:bg-zinc-100'}`}
                 onClick={() => setSidebarOpen(false)}
               >
-                {active && (
-                  <motion.div
-                    layoutId="activeRoleSidebarPill"
-                    className="absolute inset-0 rounded-xl border border-mkce-400/25"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(6,163,218,0.15) 0%, rgba(6,163,218,0.05) 100%)',
-                      boxShadow: '0 0 20px rgba(6,163,218,0.1), inset 0 1px 0 rgba(255,255,255,0.05)',
-                    }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  />
-                )}
                 <div
-                  className={`relative z-10 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150
                     ${active
-                      ? 'bg-mkce-500/90 text-white shadow-[0_2px_8px_rgba(6,163,218,0.4)]'
-                      : 'bg-white/[0.04] text-white/45 group-hover:bg-white/[0.08] group-hover:text-white/70'
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-500 group-hover:text-black'
                     }`}
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.8} />
                 </div>
-                <span className="relative z-10 truncate">{item.label}</span>
+                <span className="truncate">{item.label}</span>
                 {item.badge && (
-                  <span className="relative z-10 ml-auto text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/[0.06] text-mkce-200/80 border border-white/[0.06]">
+                  <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-md border ${
+                    active ? 'bg-zinc-800 text-white border-zinc-700' : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                  }`}>
                     {item.badge}
                   </span>
                 )}
@@ -400,54 +370,44 @@ export default function Layout() {
         </nav>
 
         {/* User Profile Card */}
-        <div className="p-3 border-t border-white/[0.06]" style={{ background: 'rgba(0,0,0,0.2)' }}>
+        <div className="p-3 border-t border-zinc-200 bg-zinc-50/70">
           <Link
             to="/profile"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] transition-all group"
+            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-zinc-200/60 transition-all group"
             onClick={() => setSidebarOpen(false)}
           >
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm border border-white/15 group-hover:scale-105 transition-transform"
-              style={{
-                background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)',
-                boxShadow: '0 2px 8px rgba(6,163,218,0.3)',
-              }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm bg-black border border-zinc-800 group-hover:scale-105 transition-transform"
             >
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-white truncate group-hover:text-mkce-300 transition-colors">
+              <p className="text-[13px] font-bold text-zinc-900 truncate group-hover:text-black transition-colors">
                 {user?.name || 'Authenticated User'}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
-                <span className="text-[11px] text-mkce-200/70 truncate font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
+                <span className="text-[11px] text-zinc-500 truncate font-medium">
                   {roleInfo.label}
                 </span>
               </div>
             </div>
-            <ChevronRight size={15} className="text-white/30 group-hover:text-white/60 group-hover:translate-x-0.5 transition-all" />
+            <ChevronRight size={15} className="text-zinc-400 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
           </Link>
         </div>
       </aside>
 
       {/* ===================== MAIN CONTENT AREA ===================== */}
-      <div className="flex-1 flex flex-col min-w-0 bg-surface-50">
+      <div className="flex-1 flex flex-col min-w-0 bg-[#fafafa]">
         {/* Top Header Bar */}
         <header
           role="banner"
-          className="h-16 flex items-center justify-between px-4 lg:px-8 border-b border-surface-200/60 sticky top-0 z-30"
-          style={{
-            background: 'rgba(255,255,255,0.85)',
-            backdropFilter: 'blur(16px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-          }}
+          className="h-16 flex items-center justify-between px-4 lg:px-8 border-b border-zinc-200 sticky top-0 z-30 bg-white/95 backdrop-blur-md"
         >
           <div className="flex items-center gap-3.5 flex-1 max-w-xl">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl hover:bg-surface-100 text-surface-600 transition-colors"
+              className="lg:hidden p-2 rounded-xl hover:bg-zinc-100 text-zinc-700 transition-colors"
               aria-label="Open navigation sidebar"
             >
               <Menu size={22} />
@@ -456,18 +416,14 @@ export default function Layout() {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden sm:flex items-center justify-between gap-3 rounded-xl px-3.5 py-2 w-full max-w-md text-left text-sm transition-all group"
-              style={{
-                background: 'rgba(241,245,249,0.8)',
-                border: '1.5px solid rgba(226,232,240,0.6)',
-              }}
+              className="hidden sm:flex items-center justify-between gap-3 rounded-xl px-3.5 py-2 w-full max-w-md text-left text-sm transition-all group bg-zinc-100 hover:bg-zinc-200/70 border border-zinc-200"
               aria-label="Quick search across platform (Press Control K)"
             >
               <div className="flex items-center gap-2.5">
-                <Search size={15} className="text-surface-400 group-hover:text-mkce-500 transition-colors" />
-                <span className="text-surface-400 group-hover:text-surface-500 truncate">Search clubs, events, opportunities...</span>
+                <Search size={15} className="text-zinc-400 group-hover:text-black transition-colors" />
+                <span className="text-zinc-500 group-hover:text-zinc-700 truncate text-xs">Search clubs, events, opportunities...</span>
               </div>
-              <kbd className="hidden md:inline-flex items-center gap-0.5 text-[10px] font-semibold text-surface-400 bg-white px-1.5 py-0.5 rounded-md" style={{ border: '1px solid rgba(226,232,240,0.6)', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
+              <kbd className="hidden md:inline-flex items-center gap-0.5 text-[10px] font-bold text-zinc-500 bg-white px-1.5 py-0.5 rounded-md border border-zinc-200">
                 <Command size={10} /> K
               </kbd>
             </button>
@@ -476,20 +432,19 @@ export default function Layout() {
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setSearchOpen(true)}
-              className="sm:hidden p-2.5 rounded-xl hover:bg-surface-100 text-surface-600"
+              className="sm:hidden p-2.5 rounded-xl hover:bg-zinc-100 text-zinc-700"
             >
               <Search size={19} />
             </button>
 
             {/* Role Chip */}
             <div
-              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${roleInfo.chipBg}`}
-              style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-zinc-100 text-black border border-zinc-200"
             >
               <roleInfo.icon size={13} className="shrink-0" />
-              <span className="font-bold">{roleInfo.badge}</span>
+              <span>{roleInfo.badge}</span>
               {user?.department && (
-                <span className="text-[11px] opacity-80 border-l border-current/15 pl-1.5 truncate max-w-[120px]">
+                <span className="text-[11px] text-zinc-500 border-l border-zinc-300 pl-1.5 truncate max-w-[120px]">
                   {user.department}
                 </span>
               )}
@@ -502,12 +457,12 @@ export default function Layout() {
                   setShowNotifications(!showNotifications);
                   if (!showNotifications) markAllRead();
                 }}
-                className="relative p-2.5 rounded-xl hover:bg-surface-100 text-surface-600 hover:text-mkce-700 transition-all active:scale-95"
+                className="relative p-2.5 rounded-xl hover:bg-zinc-100 text-zinc-700 hover:text-black transition-all active:scale-95"
                 aria-label={`View notifications (${unreadCount} unread)`}
               >
-                <Bell size={20} />
+                <Bell size={19} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                  <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 bg-black text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-xs">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -519,51 +474,45 @@ export default function Layout() {
                     initial={{ opacity: 0, y: 8, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl z-50 overflow-hidden"
-                    style={{
-                      background: 'rgba(255,255,255,0.95)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      border: '1px solid rgba(226,232,240,0.6)',
-                      boxShadow: '0 16px 48px -8px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.06)',
-                    }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl z-50 overflow-hidden bg-white border border-zinc-200 shadow-xl"
                   >
-                    <div className="p-4 border-b border-surface-100 flex items-center justify-between" style={{ background: 'rgba(248,250,252,0.5)' }}>
+                    <div className="p-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/80">
                       <div className="flex items-center gap-2">
-                        <Bell size={15} className="text-mkce-600" />
-                        <h3 className="font-display font-bold text-mkce-900 text-sm">Notifications</h3>
+                        <Bell size={15} className="text-black" />
+                        <h3 className="font-display font-bold text-black text-sm">Notifications</h3>
                       </div>
                       {unreadCount > 0 ? (
-                        <button onClick={markAllRead} className="text-[11px] font-bold text-mkce-600 hover:text-mkce-800 hover:underline">
+                        <button onClick={markAllRead} className="text-[11px] font-bold text-black hover:underline">
                           Mark all read
                         </button>
                       ) : (
-                        <span className="text-xs text-surface-400 font-medium">All caught up</span>
+                        <span className="text-xs text-zinc-400 font-medium">All caught up</span>
                       )}
                     </div>
-                    <div className="max-h-80 overflow-y-auto divide-y divide-surface-100/50 scrollbar-thin">
+                    <div className="max-h-80 overflow-y-auto divide-y divide-zinc-100 scrollbar-thin">
                       {notifications.length === 0 ? (
                         <div className="p-8 text-center">
-                          <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-2.5 text-surface-400">
+                          <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center mx-auto mb-2.5 text-zinc-400">
                             <Bell size={20} />
                           </div>
-                          <p className="text-surface-700 text-sm font-semibold">No notifications yet</p>
-                          <p className="text-surface-400 text-xs mt-0.5">We'll alert you when events or updates arrive</p>
+                          <p className="text-zinc-800 text-sm font-semibold">No notifications yet</p>
+                          <p className="text-zinc-400 text-xs mt-0.5">We'll alert you when events or updates arrive</p>
                         </div>
                       ) : (
                         notifications.slice(0, 10).map((n, i) => (
                           <div
                             key={n._id || i}
                             onClick={() => handleNotificationClick(n)}
-                            className={`p-3.5 transition-colors cursor-pointer hover:bg-surface-50/80 ${
-                              !n.isRead ? 'bg-mkce-50/40 border-l-[3px] border-mkce-500' : ''
+                            className={`p-3.5 transition-colors cursor-pointer hover:bg-zinc-50 ${
+                              !n.isRead ? 'bg-zinc-100/60 border-l-[3px] border-black' : ''
                             }`}
                           >
                             <div className="flex items-start justify-between gap-2">
-                              <p className="text-sm font-semibold text-mkce-900 leading-snug">{n.title}</p>
-                              {!n.isRead && <span className="w-2 h-2 rounded-full bg-mkce-500 shrink-0 mt-1" />}
+                              <p className="text-sm font-semibold text-black leading-snug">{n.title}</p>
+                              {!n.isRead && <span className="w-2 h-2 rounded-full bg-black shrink-0 mt-1" />}
                             </div>
-                            <p className="text-xs text-surface-500 mt-1 leading-relaxed">{n.message}</p>
+                            <p className="text-xs text-zinc-600 mt-1 leading-relaxed">{n.message}</p>
                           </div>
                         ))
                       )}
@@ -573,20 +522,16 @@ export default function Layout() {
               </AnimatePresence>
             </div>
 
-            <div className="w-px h-6 bg-surface-200/80" />
+            <div className="w-px h-6 bg-zinc-200" />
 
             {/* User Menu */}
             <div ref={userMenuRef} className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 p-1 rounded-xl hover:bg-surface-100 transition-all"
+                className="flex items-center gap-2 p-1 rounded-xl hover:bg-zinc-100 transition-all"
               >
                 <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm border border-surface-200/50"
-                  style={{
-                    background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)',
-                    boxShadow: '0 2px 6px rgba(6,163,218,0.2)',
-                  }}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-sm bg-black border border-zinc-800 shadow-xs"
                 >
                   {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
@@ -598,39 +543,33 @@ export default function Layout() {
                     initial={{ opacity: 0, y: 8, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute right-0 mt-2 w-64 rounded-2xl z-50 overflow-hidden p-2"
-                    style={{
-                      background: 'rgba(255,255,255,0.95)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      border: '1px solid rgba(226,232,240,0.6)',
-                      boxShadow: '0 16px 48px -8px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.06)',
-                    }}
+                    transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute right-0 mt-2 w-64 rounded-2xl z-50 overflow-hidden p-2 bg-white border border-zinc-200 shadow-xl"
                   >
-                    <div className="p-3 border-b border-surface-100 rounded-xl mb-1" style={{ background: 'rgba(248,250,252,0.5)' }}>
-                      <p className="text-sm font-bold text-surface-900 truncate">{user?.name}</p>
-                      <p className="text-xs text-surface-500 truncate">{user?.email}</p>
-                      <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-mkce-100/70 text-mkce-800 text-[10px] font-bold">
+                    <div className="p-3 border-b border-zinc-100 rounded-xl mb-1 bg-zinc-50">
+                      <p className="text-sm font-bold text-black truncate">{user?.name}</p>
+                      <p className="text-xs text-zinc-500 truncate">{user?.email}</p>
+                      <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-200 text-black text-[10px] font-bold">
                         <roleInfo.icon size={11} />
                         <span>{roleInfo.label}</span>
                       </div>
                     </div>
                     <div className="space-y-0.5">
-                      <Link to="/profile" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-surface-700 hover:text-mkce-700 hover:bg-surface-100/80 transition-colors" onClick={() => setShowUserMenu(false)}>
+                      <Link to="/profile" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition-colors" onClick={() => setShowUserMenu(false)}>
                         <UserIcon size={15} /><span>My Profile & Portfolio</span>
                       </Link>
                       {(user?.role === 'admin' || user?.role === 'hod') && (
-                        <Link to="/admin" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-surface-700 hover:text-mkce-700 hover:bg-surface-100/80 transition-colors" onClick={() => setShowUserMenu(false)}>
-                          <Shield size={15} className="text-amber-500" /><span>Admin Dashboard</span>
+                        <Link to="/admin" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition-colors" onClick={() => setShowUserMenu(false)}>
+                          <Shield size={15} /><span>Admin Dashboard</span>
                         </Link>
                       )}
-                      <Link to="/clubs" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-surface-700 hover:text-mkce-700 hover:bg-surface-100/80 transition-colors" onClick={() => setShowUserMenu(false)}>
+                      <Link to="/clubs" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition-colors" onClick={() => setShowUserMenu(false)}>
                         <Users size={15} /><span>Campus Clubs Hub</span>
                       </Link>
-                      <div className="my-1 border-t border-surface-100" />
+                      <div className="my-1 border-t border-zinc-200" />
                       <button
                         onClick={() => { setShowUserMenu(false); logout(); navigate('/login'); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50/80 transition-colors text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors text-left"
                       >
                         <LogOut size={15} /><span>Sign Out</span>
                       </button>
@@ -652,27 +591,26 @@ export default function Layout() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.97, y: -16 }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-white w-full max-w-xl rounded-2xl overflow-hidden"
-                style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(226,232,240,0.3)' }}
+                className="bg-white w-full max-w-xl rounded-2xl overflow-hidden border border-zinc-200 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center gap-3 px-4 py-3.5 border-b border-surface-100">
-                  <Search size={18} className="text-surface-400" />
+                <div className="flex items-center gap-3 px-4 py-3.5 border-b border-zinc-200">
+                  <Search size={18} className="text-zinc-400" />
                   <input
                     ref={searchInputRef}
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search clubs, events, opportunities..."
-                    className="w-full bg-transparent outline-none text-sm text-surface-900 placeholder:text-surface-400 font-medium"
+                    className="w-full bg-transparent outline-none text-sm text-black placeholder:text-zinc-400 font-medium"
                   />
-                  <kbd className="text-[10px] font-semibold text-surface-400 bg-surface-100 px-2 py-0.5 rounded-md border border-surface-200/80">
+                  <kbd className="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-md border border-zinc-200">
                     ESC
                   </kbd>
                 </div>
                 <div className="max-h-80 overflow-y-auto p-2 scrollbar-thin">
                   {filteredSearch.length === 0 ? (
-                    <div className="p-6 text-center text-sm text-surface-500">No matching pages found</div>
+                    <div className="p-6 text-center text-sm text-zinc-500">No matching pages found</div>
                   ) : (
                     filteredSearch.map((item) => {
                       const Icon = item.icon;
@@ -680,18 +618,18 @@ export default function Layout() {
                         <button
                           key={item.path + item.title}
                           onClick={() => { setSearchOpen(false); navigate(item.path); }}
-                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-surface-100/80 text-left transition-colors group"
+                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-zinc-100 text-left transition-colors group"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-surface-100 text-surface-600 group-hover:bg-mkce-500 group-hover:text-white flex items-center justify-center transition-all duration-200">
+                            <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-700 group-hover:bg-black group-hover:text-white flex items-center justify-center transition-all duration-150">
                               <Icon size={16} />
                             </div>
                             <div>
-                              <p className="text-sm font-semibold text-surface-800 group-hover:text-mkce-700">{item.title}</p>
-                              <p className="text-[11px] text-surface-400">{item.category}</p>
+                              <p className="text-sm font-semibold text-zinc-900 group-hover:text-black">{item.title}</p>
+                              <p className="text-[11px] text-zinc-400">{item.category}</p>
                             </div>
                           </div>
-                          <ChevronRight size={15} className="text-surface-300 group-hover:text-mkce-600 group-hover:translate-x-0.5 transition-all" />
+                          <ChevronRight size={15} className="text-zinc-300 group-hover:text-black group-hover:translate-x-0.5 transition-all" />
                         </button>
                       );
                     })
@@ -703,7 +641,7 @@ export default function Layout() {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main id="main-content" tabIndex={-1} className="flex-1 overflow-y-auto p-4 lg:p-8 scrollbar-thin outline-none">
+        <main id="main-content" tabIndex={-1} className="flex-1 overflow-y-auto p-4 lg:p-8 scrollbar-thin outline-none bg-[#fafafa]">
           <PageTransition>
             <Outlet />
           </PageTransition>
@@ -712,15 +650,10 @@ export default function Layout() {
         {/* Footer */}
         <footer
           role="contentinfo"
-          className="px-8 py-3.5 border-t border-surface-200/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs"
-          style={{
-            background: 'rgba(255,255,255,0.8)',
-            backdropFilter: 'blur(8px)',
-            color: '#94a3b8',
-          }}
+          className="px-8 py-3.5 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs bg-white text-zinc-500"
         >
           <span>&copy; 2026 M. Kumarasamy College of Engineering, Karur &mdash; Autonomous</span>
-          <span className="text-mkce-600/70 font-medium text-[11px]">Technology Innovation Hub &bull; Enterprise Campus Portal</span>
+          <span className="text-black font-semibold text-[11px]">Technology Innovation Hub &bull; Campus Portal</span>
         </footer>
       </div>
     </div>

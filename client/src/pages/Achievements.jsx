@@ -49,44 +49,41 @@ export default function Achievements() {
   const canHighlight = user?.role === 'admin' || user?.role === 'hod' || user?.role === 'leader';
 
   const spotlightBadges = [
-    { tier: 'gold', title: 'Grand Champion', user: 'Bob Smith', honor: 'SIH National Winners 2025', desc: 'Secured 1st place in Smart India Hackathon among 300+ university teams.', icon: Crown, bg: 'linear-gradient(135deg, #f7ce58 0%, #d89a06 100%)' },
-    { tier: 'diamond', title: 'Research Vanguard', user: 'David Kim', honor: 'IEEE AI Transactions Publication', desc: 'Published peer-reviewed paper on Edge Neural Acceleration.', icon: Medal, bg: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' },
-    { tier: 'special', title: 'Open Source Fellow', user: 'Student Demo', honor: 'Google Summer of Code Selected', desc: 'Contributing to Linux Foundation distributed telemetry.', icon: Star, bg: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' },
+    { tier: 'gold', title: 'Grand Champion', user: 'Bob Smith', honor: 'SIH National Winners 2025', desc: 'Secured 1st place in Smart India Hackathon among 300+ university teams.', icon: Crown, bg: '#000000' },
+    { tier: 'diamond', title: 'Research Vanguard', user: 'David Kim', honor: 'IEEE AI Transactions Publication', desc: 'Published peer-reviewed paper on Edge Neural Acceleration.', icon: Medal, bg: '#000000' },
+    { tier: 'special', title: 'Open Source Fellow', user: 'Student Demo', honor: 'Google Summer of Code Selected', desc: 'Contributing to Linux Foundation distributed telemetry.', icon: Star, bg: '#000000' },
   ];
 
   const badgeOptions = ['🏆 National Champion', '📜 IEEE Scholar', '⭐ Open Source Star', '🤖 Robotics Innovator', '💡 Innovation Award', '🎖️ Campus Pioneer', '🥇 Hackathon Winner'];
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto font-sans">
+    <div className="space-y-8 max-w-6xl mx-auto font-sans text-zinc-900">
       <SEO title="Hall of Fame & Verified Student Achievements" description="Celebrate student victories, hackathon awards, research publications, and patents at M. Kumarasamy College of Engineering." keywords="MKCE Achievements, Student Awards Karur, Engineering Hall of Fame" canonical="/achievements" />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1"><span className="badge-gold"><Trophy size={12} className="mr-1 text-amber-600" />Verified Hall of Fame</span></div>
+          <div className="flex items-center gap-2 mb-1"><span className="badge-gold"><Trophy size={12} className="mr-1 text-black" />Verified Hall of Fame</span></div>
           <h1 className="page-heading">Campus Achievements</h1>
-          <p className="text-surface-500 text-sm mt-1">Celebrate project victories, hackathon ranks, research milestones, and campus honors.</p>
+          <p className="text-zinc-500 text-sm mt-1">Celebrate project victories, hackathon ranks, research milestones, and campus honors.</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="btn-gold flex items-center gap-2 self-start sm:self-auto shimmer-btn"><Plus size={18} /><span>Post Achievement</span></button>
+        <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto"><Plus size={18} /><span>Post Achievement</span></button>
       </div>
 
       {/* Honor Roll Spotlight */}
-      <div className="rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #010018 0%, #020024 20%, #09203f 45%, #073f69 70%, #06A3DA 95%, #60bbfa 100%)', boxShadow: '0 8px 32px -8px rgba(6,163,218,0.2), 0 24px 48px -12px rgba(2,0,36,0.3)' }}>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-mkce-400/10 rounded-full blur-[80px] pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-48 h-48 bg-gold/8 rounded-full blur-[60px] pointer-events-none" />
+      <div className="rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden bg-black border border-zinc-800 shadow-xl">
         <div className="flex items-center justify-between mb-6 relative z-10">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-gold" style={{ background: 'rgba(247,206,88,0.15)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-zinc-900 border border-zinc-700">
               <Award size={20} />
             </div>
             <div>
               <h2 className="font-display font-black text-xl text-white">Campus Honor Roll</h2>
-              <p className="text-xs text-mkce-200/70">Distinguished student researchers & competition winners</p>
+              <p className="text-xs text-zinc-400 font-medium">Distinguished student researchers & competition winners</p>
             </div>
           </div>
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(191,227,254,0.9)' }}>
-            <Sparkles size={13} className="text-gold" />Verified Ledger
+          <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-zinc-900 border border-zinc-700 text-zinc-300">
+            <Sparkles size={13} className="text-white" />Verified Ledger
           </span>
         </div>
 
@@ -95,16 +92,14 @@ export default function Achievements() {
             const Icon = badge.icon;
             return (
               <div key={i} onClick={() => setSelectedBadge(badge)}
-                className="rounded-2xl p-5 cursor-pointer flex flex-col items-center text-center group transition-all duration-300 hover:-translate-y-1"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg mb-3 group-hover:scale-110 transition-transform duration-300"
-                  style={{ background: badge.bg, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
-                  <Icon size={30} />
+                className="rounded-2xl p-5 cursor-pointer flex flex-col items-center text-center group transition-all duration-200 hover:-translate-y-1 bg-zinc-900/90 border border-zinc-800 hover:border-zinc-700">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white bg-black border border-zinc-700 shadow-md mb-3 group-hover:scale-105 transition-transform duration-200">
+                  <Icon size={30} className="text-white" />
                 </div>
-                <p className="font-display font-extrabold text-base text-white group-hover:text-gold transition-colors">{badge.user}</p>
-                <p className="text-xs text-gold-light font-bold mt-0.5">{badge.title}</p>
-                <span className="text-[11px] text-white/70 mt-1 font-medium leading-tight line-clamp-1">{badge.honor}</span>
-                <span className="text-[10px] font-bold text-mkce-300 mt-2.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <p className="font-display font-black text-base text-white group-hover:text-zinc-200 transition-colors">{badge.user}</p>
+                <p className="text-xs text-zinc-400 font-bold mt-0.5">{badge.title}</p>
+                <span className="text-[11px] text-zinc-400 mt-1 font-medium leading-tight line-clamp-1">{badge.honor}</span>
+                <span className="text-[10px] font-bold text-white mt-2.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Eye size={11} /> View Details
                 </span>
               </div>
@@ -118,21 +113,20 @@ export default function Achievements() {
         {selectedBadge && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-              className="rounded-3xl p-7 max-w-md w-full text-white text-center relative"
-              style={{ background: 'linear-gradient(135deg, #020024 0%, #09203f 40%, #073f69 70%, #06A3DA 100%)', boxShadow: '0 24px 64px -12px rgba(0,0,0,0.4)' }}>
-              <button onClick={() => setSelectedBadge(null)} className="absolute top-4 right-4 p-2 text-white/60 hover:text-white rounded-xl hover:bg-white/10"><X size={20} /></button>
-              <div className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-white shadow-xl mb-4" style={{ background: selectedBadge.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
-                <selectedBadge.icon size={38} />
+              className="rounded-3xl p-7 max-w-md w-full text-white text-center relative bg-black border border-zinc-800 shadow-2xl">
+              <button onClick={() => setSelectedBadge(null)} className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800"><X size={20} /></button>
+              <div className="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-white bg-zinc-900 border border-zinc-700 shadow-xl mb-4">
+                <selectedBadge.icon size={38} className="text-white" />
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', color: '#f9d423' }}>{selectedBadge.title}</span>
+              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-700 text-zinc-300">{selectedBadge.title}</span>
               <h3 className="text-2xl font-display font-black text-white mt-3">{selectedBadge.user}</h3>
-              <p className="text-sm font-semibold text-gold-light mt-1">{selectedBadge.honor}</p>
-              <p className="text-xs text-white/65 leading-relaxed mt-3 px-2">{selectedBadge.desc}</p>
-              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
-                <span className="flex items-center gap-1 text-emerald-400"><ShieldCheck size={14} /> Verified by MKCE</span>
+              <p className="text-sm font-semibold text-zinc-300 mt-1">{selectedBadge.honor}</p>
+              <p className="text-xs text-zinc-400 leading-relaxed mt-3 px-2 font-medium">{selectedBadge.desc}</p>
+              <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                <span className="flex items-center gap-1 text-white font-bold"><ShieldCheck size={14} /> Verified by MKCE</span>
                 <span>2025-26</span>
               </div>
-              <button onClick={() => setSelectedBadge(null)} className="btn-mkce w-full py-2.5 text-sm font-bold mt-6">Close Showcase</button>
+              <button onClick={() => setSelectedBadge(null)} className="btn-mkce w-full py-2.5 text-sm font-bold mt-6 bg-white text-black hover:bg-zinc-200">Close Showcase</button>
             </motion.div>
           </div>
         )}
@@ -141,27 +135,27 @@ export default function Achievements() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.2)' }}>
-              <div className="p-6 border-b border-surface-100 text-white flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)' }}>
-                <div><h2 className="font-display font-bold text-lg">Post Your Achievement</h2><p className="text-xs text-mkce-200/80 mt-0.5">Share your hackathon, certification, or project victory</p></div>
-                <button onClick={() => setShowCreate(false)} className="p-1 text-white/60 hover:text-white rounded-lg"><X size={20} /></button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden border border-zinc-200 shadow-2xl">
+              <div className="p-6 border-b border-zinc-800 text-white flex items-center justify-between bg-black">
+                <div><h2 className="font-display font-bold text-lg text-white">Post Your Achievement</h2><p className="text-xs text-zinc-400 mt-0.5 font-medium">Share your hackathon, certification, or project victory</p></div>
+                <button onClick={() => setShowCreate(false)} className="p-1 text-zinc-400 hover:text-white rounded-lg"><X size={20} /></button>
               </div>
               <form onSubmit={createAchievement} className="p-6 space-y-4">
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Achievement Title</label>
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Achievement Title</label>
                   <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="input-mkce" placeholder="e.g. 1st Place at Smart India Hackathon 2026" /></div>
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Badge Type</label>
-                  <select value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="input-mkce cursor-pointer">
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Badge Type</label>
+                  <select value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="input-mkce cursor-pointer font-medium">
                     {badgeOptions.map((b) => <option key={b} value={b}>{b}</option>)}
                   </select></div>
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Description & Highlights</label>
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Description & Highlights</label>
                   <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-mkce resize-none" placeholder="Provide details about the competition, tech stack, or certificate..." rows={4} /></div>
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Media URL (Optional)</label>
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Media URL (Optional)</label>
                   <input type="url" value={form.mediaUrl} onChange={(e) => setForm({ ...form, mediaUrl: e.target.value })} className="input-mkce text-xs" placeholder="https://images.unsplash.com/..." /></div>
                 <div className="flex gap-3 pt-3">
-                  <button type="submit" className="btn-gold flex-1 py-3 text-sm font-bold">Post to Hall of Fame</button>
-                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm">Cancel</button>
+                  <button type="submit" className="btn-mkce flex-1 py-3 text-sm font-bold">Post to Hall of Fame</button>
+                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm font-bold">Cancel</button>
                 </div>
               </form>
             </motion.div>
@@ -174,10 +168,10 @@ export default function Achievements() {
         <div className="space-y-5">{[1,2,3].map(i => <div key={i} className="skeleton rounded-3xl h-44" />)}</div>
       ) : achievements.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-amber-700"><Trophy size={32} /></div>
-          <h3 className="font-display font-bold text-mkce-900 text-lg">No Achievements Yet</h3>
-          <p className="text-surface-500 text-sm mt-1">Be the pioneer and post the first milestone!</p>
-          <button onClick={() => setShowCreate(true)} className="btn-gold mt-4 text-xs inline-flex items-center gap-1.5"><Plus size={15} /><span>Post First Achievement</span></button>
+          <div className="w-16 h-16 bg-zinc-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-zinc-400"><Trophy size={32} /></div>
+          <h3 className="font-display font-bold text-black text-lg">No Achievements Yet</h3>
+          <p className="text-zinc-500 text-sm mt-1 font-medium">Be the pioneer and post the first milestone!</p>
+          <button onClick={() => setShowCreate(true)} className="btn-mkce mt-4 text-xs inline-flex items-center gap-1.5"><Plus size={15} /><span>Post First Achievement</span></button>
         </div>
       ) : (
         <StaggerContainer className="space-y-5">
@@ -188,43 +182,42 @@ export default function Achievements() {
               <StaggerItem key={ach._id}>
                 <div className="card-premium p-6 sm:p-7">
                   <div className="flex items-start gap-4 sm:gap-5">
-                    <div className="w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 text-white"
-                      style={{ background: 'linear-gradient(135deg, #f7ce58 0%, #d89a06 100%)', boxShadow: '0 4px 12px rgba(216,154,6,0.25)' }}>
+                    <div className="w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 text-amber-600 bg-amber-50 border border-amber-200 shadow-xs">
                       <Trophy size={24} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-display font-bold text-lg sm:text-xl text-mkce-900 leading-snug">{ach.title}</h3>
+                          <h3 className="font-display font-bold text-lg sm:text-xl text-zinc-900 leading-snug">{ach.title}</h3>
                           {ach.badge && <span className="badge-gold text-xs font-bold">{ach.badge}</span>}
-                          {ach.isHighlighted && <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-xs font-bold"><Award size={13} />Verified Highlight</span>}
+                          {ach.isHighlighted && <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold"><Award size={13} />Verified Highlight</span>}
                         </div>
                         <div className="flex items-center gap-1.5">
-                          {canHighlight && !ach.isHighlighted && <button onClick={() => highlightAchievement(ach._id)} className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold border border-emerald-200/80 transition-colors">⭐ Highlight</button>}
-                          {(isOwner || user?.role === 'admin') && <button onClick={() => deleteAchievement(ach._id)} className="p-1.5 rounded-lg hover:bg-red-50 text-surface-400 hover:text-red-600 transition-colors"><Trash2 size={15} /></button>}
+                          {canHighlight && !ach.isHighlighted && <button onClick={() => highlightAchievement(ach._id)} className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold border border-emerald-200 transition-colors">⭐ Highlight</button>}
+                          {(isOwner || user?.role === 'admin') && <button onClick={() => deleteAchievement(ach._id)} className="p-1.5 rounded-lg hover:bg-red-50 text-zinc-400 hover:text-red-600 transition-colors"><Trash2 size={15} /></button>}
                         </div>
                       </div>
-                      <p className="text-xs text-surface-500 mt-1">Conferred to <span className="font-bold text-mkce-800">{ach.user?.name || 'Student'}</span>{ach.user?.department && <span className="text-surface-400"> ({ach.user.department})</span>} • <span>{formatDateSafely(ach.createdAt)}</span></p>
-                      {ach.description && <p className="text-surface-700 text-sm mt-3 leading-relaxed whitespace-pre-wrap">{ach.description}</p>}
+                      <p className="text-xs text-zinc-500 mt-1">Conferred to <span className="font-bold text-black">{ach.user?.name || 'Student'}</span>{ach.user?.department && <span className="text-zinc-400"> ({ach.user.department})</span>} • <span>{formatDateSafely(ach.createdAt)}</span></p>
+                      {ach.description && <p className="text-zinc-700 text-sm mt-3 leading-relaxed whitespace-pre-wrap font-normal">{ach.description}</p>}
                       {ach.media?.length > 0 && ach.media[0] && (
-                        <div className="mt-4 rounded-2xl overflow-hidden max-h-72 border border-surface-200/60 bg-surface-100">
+                        <div className="mt-4 rounded-2xl overflow-hidden max-h-72 border border-zinc-200 bg-zinc-50">
                           <img src={ach.media[0]} alt={ach.title} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                         </div>
                       )}
-                      <div className="flex items-center gap-6 mt-4 pt-3.5 border-t border-surface-100/60">
-                        <button onClick={() => likeAchievement(ach._id)} className={`flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${isLiked ? 'text-red-500' : 'text-surface-500 hover:text-red-500'}`}>
+                      <div className="flex items-center gap-6 mt-4 pt-3.5 border-t border-zinc-100">
+                        <button onClick={() => likeAchievement(ach._id)} className={`flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${isLiked ? 'text-rose-600' : 'text-zinc-500 hover:text-rose-600'}`}>
                           <Heart size={17} fill={isLiked ? 'currentColor' : 'none'} strokeWidth={2} /><span>{ach.likes?.length || 0} Kudos</span>
                         </button>
-                        <button onClick={() => toggleComments(ach._id)} className="flex items-center gap-1.5 text-xs font-bold text-surface-500 hover:text-mkce-600 transition-colors">
+                        <button onClick={() => toggleComments(ach._id)} className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-blue-600 transition-colors">
                           <MessageCircle size={17} /><span>{ach.comments?.length || 0} Comments</span>
                         </button>
                       </div>
                       {expandedComments[ach._id] && ach.comments?.length > 0 && (
-                        <div className="mt-3.5 space-y-2 p-3.5 rounded-2xl border border-surface-100/60" style={{ background: 'rgba(248,250,252,0.6)' }}>
+                        <div className="mt-3.5 space-y-2 p-3.5 rounded-2xl border border-zinc-200 bg-zinc-50">
                           {ach.comments.map((comment, i) => (
                             <div key={comment._id || i} className="text-xs flex items-start gap-2">
-                              <span className="font-bold text-mkce-800 shrink-0">{comment.author?.name || 'Peer'}:</span>
-                              <span className="text-surface-600 leading-relaxed">{comment.content}</span>
+                              <span className="font-bold text-black shrink-0">{comment.author?.name || 'Peer'}:</span>
+                              <span className="text-zinc-700 leading-relaxed">{comment.content}</span>
                             </div>
                           ))}
                         </div>

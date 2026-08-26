@@ -20,13 +20,12 @@ function PrivateRoute({ children }) {
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-white">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-bold text-2xl text-white shadow-glow"
-          style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' }}>
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-black text-2xl text-white bg-black shadow-md border border-zinc-800">
           MK
         </div>
         <div className="flex flex-col items-center gap-2">
-          <div className="w-8 h-8 border-2 border-mkce-200 border-t-mkce-500 rounded-full animate-spin"></div>
-          <p className="text-sm text-surface-400 font-medium font-display">Loading MKCE Connect...</p>
+          <div className="w-8 h-8 border-2 border-zinc-200 border-t-black rounded-full animate-spin"></div>
+          <p className="text-xs text-zinc-500 font-bold tracking-wider font-display uppercase">Loading MKCE Connect...</p>
         </div>
       </div>
     </div>
@@ -69,17 +68,18 @@ export default function App() {
           toastOptions={{
             duration: 3000,
             style: {
-              background: '#09203f',
-              color: '#f8fafc',
+              background: '#000000',
+              color: '#ffffff',
               borderRadius: '12px',
               padding: '12px 18px',
               fontSize: '13px',
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: '500',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: '600',
+              border: '1px solid #27272a',
+              boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.25)',
             },
-            success: { iconTheme: { primary: '#06A3DA', secondary: '#f8fafc' } },
-            error: { iconTheme: { primary: '#ef4444', secondary: '#f8fafc' } },
+            success: { iconTheme: { primary: '#ffffff', secondary: '#000000' } },
+            error: { iconTheme: { primary: '#ef4444', secondary: '#ffffff' } },
           }}
         />
         <AppRoutes />

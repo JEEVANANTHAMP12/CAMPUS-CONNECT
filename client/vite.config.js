@@ -16,21 +16,23 @@ export default defineConfig({
         ws: true,
         changeOrigin: true,
         configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            const benignCodes = ['ECONNRESET', 'EPIPE', 'ECONNREFUSED', 'ETIMEDOUT'];
-            if (!benignCodes.includes(err.code)) {
-              console.warn('[vite-proxy] socket notice:', err.message);
+          proxy.on('error', (err, _req, res) => {
+            const benignCodes = ['ECONNRESET', 'EPIPE', 'ECONNREFUSED', 'ETIMEDOUT', 'ERR_STREAM_PREMATURE_CLOSE'];
+            if (!benignCodes.includes(err?.code)) {
+              console.warn('[vite-proxy] notice:', err?.message || err);
+            }
+            if (res && !res.headersSent && typeof res.writeHead === 'function') {
+              res.writeHead(502, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Backend server is restarting or offline' }));
             }
           });
           proxy.on('proxyReqWs', (_proxyReq, _req, socket, _options, _head) => {
-            socket.on('error', (_err) => {
-              // Gracefully handle client-side socket teardowns
-            });
+            socket.on('error', () => {});
+            socket.on('close', () => {});
           });
           proxy.on('open', (proxySocket) => {
-            proxySocket.on('error', (_err) => {
-              // Gracefully handle backend-side socket teardowns (EPIPE, ECONNRESET)
-            });
+            proxySocket.on('error', () => {});
+            proxySocket.on('close', () => {});
           });
         },
       },

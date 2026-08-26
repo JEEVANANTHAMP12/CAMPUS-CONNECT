@@ -107,7 +107,7 @@ export default function Messages() {
   );
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto font-sans">
+    <div className="space-y-6 max-w-7xl mx-auto font-sans text-zinc-900">
       <SEO
         title="Direct Campus Messenger & Chapter Chats"
         description="Collaborate in real-time with fellow students, club leaders, and academic peers across M. Kumarasamy College of Engineering."
@@ -127,17 +127,17 @@ export default function Messages() {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl border border-surface-200/80 shadow-card overflow-hidden">
+      <div className="bg-white rounded-3xl border border-zinc-200 shadow-card overflow-hidden">
         <div className="flex h-[calc(100vh-16rem)] min-h-[500px]">
           {/* Conversation Sidebar */}
           <div
-            className={`w-full md:w-80 border-r border-surface-200 flex flex-col bg-surface-50/20 ${
+            className={`w-full md:w-80 border-r border-zinc-200 flex flex-col bg-white ${
               selectedUser ? 'hidden md:flex' : 'flex'
             }`}
           >
-            <div className="p-4 border-b border-surface-100 bg-white">
+            <div className="p-4 border-b border-zinc-100 bg-white">
               <div className="relative">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-400" />
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
                 <input
                   type="text"
                   value={search}
@@ -148,16 +148,16 @@ export default function Messages() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-thin divide-y divide-surface-100">
+            <div className="flex-1 overflow-y-auto scrollbar-thin divide-y divide-zinc-100">
               {loading ? (
                 <div className="flex justify-center py-12">
-                  <div className="w-8 h-8 border-2 border-mkce-200 border-t-mkce-600 rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-2 border-zinc-200 border-t-black rounded-full animate-spin" />
                 </div>
               ) : filteredConversations.length === 0 ? (
                 <div className="p-8 text-center">
-                  <MessageSquare size={32} className="mx-auto text-surface-300 mb-2" />
-                  <p className="text-surface-500 text-xs font-semibold">No conversations yet</p>
-                  <p className="text-surface-400 text-[11px] mt-1">Start chatting by opening a club or student profile.</p>
+                  <MessageSquare size={32} className="mx-auto text-zinc-300 mb-2" />
+                  <p className="text-zinc-500 text-xs font-semibold">No conversations yet</p>
+                  <p className="text-zinc-400 text-[11px] mt-1">Start chatting by opening a club or student profile.</p>
                 </div>
               ) : (
                 filteredConversations.map((conv) => {
@@ -171,31 +171,30 @@ export default function Messages() {
                       onClick={() => loadMessages(uid)}
                       className={`w-full flex items-center gap-3.5 p-4 text-left transition-all duration-150 ${
                         isActive
-                          ? 'bg-mkce-50 border-l-4 border-mkce-500 shadow-xs'
-                          : 'hover:bg-surface-50'
+                          ? 'bg-zinc-100 border-l-4 border-black shadow-xs'
+                          : 'hover:bg-zinc-50'
                       }`}
                     >
                       <div className="relative shrink-0">
                         <div
-                          className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-sm text-white shadow-xs"
-                          style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' }}
+                          className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-sm text-white bg-black border border-zinc-800 shadow-xs"
                         >
                           {name.charAt(0).toUpperCase()}
                         </div>
                         {isOnline && (
-                          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-xs" />
+                          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-black border-2 border-white rounded-full shadow-xs" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-bold text-mkce-900 truncate">{name}</p>
+                          <p className="text-xs font-bold text-zinc-900 truncate">{name}</p>
                           {conv.lastMessage?.createdAt && (
-                            <span className="text-[10px] text-surface-400">
+                            <span className="text-[10px] text-zinc-400 font-medium">
                               {formatDateSafely(conv.lastMessage.createdAt, 'h:mm a')}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-surface-400 truncate mt-0.5">
+                        <p className="text-[11px] text-zinc-500 truncate mt-0.5 font-medium">
                           {conv.lastMessage?.content || 'Click to open conversation'}
                         </p>
                       </div>
@@ -207,41 +206,40 @@ export default function Messages() {
           </div>
 
           {/* Active Chat Pane */}
-          <div className={`flex-1 flex flex-col bg-surface-50/40 ${selectedUser ? 'flex' : 'hidden md:flex'}`}>
+          <div className={`flex-1 flex flex-col bg-[#fafafa] ${selectedUser ? 'flex' : 'hidden md:flex'}`}>
             {selectedUser ? (
               <>
                 {/* Chat Header */}
-                <div className="px-6 py-4 border-b border-surface-200 bg-white flex items-center justify-between shadow-xs">
+                <div className="px-6 py-4 border-b border-zinc-200 bg-white flex items-center justify-between shadow-xs">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setSelectedUser(null)}
-                      className="md:hidden p-2 rounded-xl hover:bg-surface-100 text-surface-600"
+                      className="md:hidden p-2 rounded-xl hover:bg-zinc-100 text-zinc-700"
                     >
                       <ArrowLeft size={18} />
                     </button>
                     <div className="relative">
                       <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-xs"
-                        style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)' }}
+                        className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-white text-sm bg-black border border-zinc-800 shadow-xs"
                       >
                         {(selectedConversation?._id?.name || selectedConversation?.name || 'U').charAt(0).toUpperCase()}
                       </div>
                       {onlineUsers.includes(selectedUser) && (
-                        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
+                        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-black border-2 border-white rounded-full" />
                       )}
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm font-bold text-mkce-900">
+                      <p className="text-xs sm:text-sm font-bold text-black">
                         {selectedConversation?._id?.name || selectedConversation?.name || 'Peer Chat'}
                       </p>
-                      <p className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <p className="text-[10px] text-zinc-600 font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-black" />
                         {onlineUsers.includes(selectedUser) ? 'Online & Active' : 'Offline'}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-surface-400 font-semibold px-3 py-1 rounded-full bg-surface-100">
-                    <ShieldCheck size={13} className="text-emerald-500" />
+                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-700 font-bold px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200">
+                    <ShieldCheck size={13} className="text-black" />
                     <span>MKCE Verified Protocol</span>
                   </div>
                 </div>
@@ -250,11 +248,11 @@ export default function Messages() {
                 <div className="flex-1 overflow-y-auto p-6 space-y-3.5 scrollbar-thin">
                   {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                      <div className="w-12 h-12 rounded-2xl bg-mkce-50 flex items-center justify-center text-mkce-500 mb-2">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-600 mb-2">
                         <MessageSquare size={22} />
                       </div>
-                      <p className="text-xs font-bold text-mkce-900">Start of Conversation</p>
-                      <p className="text-[11px] text-surface-400 mt-0.5">Send a message below to connect.</p>
+                      <p className="text-xs font-bold text-black">Start of Conversation</p>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">Send a message below to connect.</p>
                     </div>
                   ) : (
                     messages.map((msg, i) => {
@@ -264,20 +262,20 @@ export default function Messages() {
                           key={msg._id || i}
                           initial={{ opacity: 0, y: 8, scale: 0.98 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
-                          transition={{ duration: 0.2 }}
+                          transition={{ duration: 0.15 }}
                           className={`flex ${isSent ? 'justify-end' : 'justify-start'}`}
                         >
                           <div
-                            className={`max-w-[78%] px-4.5 py-3 rounded-2xl shadow-xs text-xs sm:text-sm leading-relaxed ${
+                            className={`max-w-[78%] px-4.5 py-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                               isSent
-                                ? 'bg-mkce-600 text-white rounded-br-xs shadow-mkce-600/10'
-                                : 'bg-white text-surface-800 rounded-bl-xs border border-surface-200/80 shadow-xs'
+                                ? 'bg-black text-white rounded-br-xs shadow-xs'
+                                : 'bg-white text-zinc-900 rounded-bl-xs border border-zinc-200 shadow-xs'
                             }`}
                           >
                             <p>{msg.content}</p>
                             <span
                               className={`text-[9px] block mt-1 text-right font-medium ${
-                                isSent ? 'text-white/70' : 'text-surface-400'
+                                isSent ? 'text-zinc-400' : 'text-zinc-400'
                               }`}
                             >
                               {formatDateSafely(msg.createdAt)}
@@ -291,7 +289,7 @@ export default function Messages() {
                 </div>
 
                 {/* Input Bar */}
-                <div className="p-4 bg-white border-t border-surface-200 flex items-center gap-3">
+                <div className="p-4 bg-white border-t border-zinc-200 flex items-center gap-3">
                   <input
                     ref={inputRef}
                     type="text"
@@ -317,11 +315,11 @@ export default function Messages() {
               </>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-                <div className="w-16 h-16 rounded-3xl bg-mkce-50 flex items-center justify-center text-mkce-500 mb-3 shadow-xs">
+                <div className="w-16 h-16 rounded-3xl bg-zinc-100 flex items-center justify-center text-zinc-500 mb-3 shadow-xs">
                   <MessageSquare size={32} />
                 </div>
-                <h3 className="font-display font-bold text-mkce-900 text-base">Select a Peer to Chat</h3>
-                <p className="text-surface-400 text-xs mt-1 max-w-xs leading-relaxed">
+                <h3 className="font-display font-bold text-black text-base">Select a Peer to Chat</h3>
+                <p className="text-zinc-500 text-xs mt-1 max-w-xs leading-relaxed font-medium">
                   Communicate in real-time with club members, chapter leaders, and fellow student engineers.
                 </p>
               </div>

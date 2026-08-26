@@ -71,7 +71,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto font-sans">
+    <div className="space-y-8 max-w-7xl mx-auto font-sans text-zinc-900">
       <SEO
         title="Campus Hub & Dashboard"
         description="Access MKCE Connect dashboard for live student clubs, upcoming technical symposiums, career placement opportunities, and verified college achievements at M. Kumarasamy College of Engineering."
@@ -79,55 +79,38 @@ export default function Dashboard() {
         canonical="/"
       />
 
-      {/* ==================== PREMIUM HERO BANNER ==================== */}
+      {/* ==================== PREMIUM HERO BANNER IN SOLID BLACK ==================== */}
       <div
-        className="rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, #010018 0%, #020024 20%, #09203f 45%, #073f69 70%, #06A3DA 95%, #60bbfa 100%)',
-          boxShadow: '0 8px 32px -8px rgba(6,163,218,0.2), 0 24px 48px -12px rgba(2,0,36,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
-          border: '1px solid rgba(255,255,255,0.06)',
-        }}
+        className="rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden bg-black border border-zinc-800 shadow-xl"
       >
-        {/* Ambient glow orbs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-mkce-400/8 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-gold/8 rounded-full blur-[80px] pointer-events-none" />
-        <div className="absolute top-1/2 left-0 w-48 h-48 bg-mkce-500/10 rounded-full blur-[60px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-zinc-800/30 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4"
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              color: 'rgba(191,227,254,0.9)',
-            }}>
-            <Sparkles size={13} className="text-gold" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-4 bg-zinc-900 border border-zinc-700 text-zinc-200">
+            <Sparkles size={13} className="text-amber-400" />
             <span>M. Kumarasamy College of Engineering Digital Campus</span>
           </div>
 
-          <p className="text-mkce-200/80 text-sm font-medium">{getGreeting()},</p>
-          <h1 className="text-2xl sm:text-4xl font-display font-black tracking-tight mt-1 mb-3 leading-tight">
+          <p className="text-zinc-400 text-sm font-semibold">{getGreeting()},</p>
+          <h1 className="text-2xl sm:text-4xl font-display font-black tracking-tight mt-1 mb-3 leading-tight text-white">
             {user?.name || 'Engineer'}!
           </h1>
-          <p className="text-mkce-100/70 text-sm sm:text-base leading-relaxed mb-7 max-w-xl">
+          <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-7 max-w-xl font-normal">
             Welcome to your unified campus portal &mdash; connect with student chapters, participate in upcoming technical events, discover career placements, and showcase achievements.
           </p>
 
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-              style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <Award size={13} className="text-gold" />
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-700 text-white">
+              <Award size={13} className="text-amber-400" />
               {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Student'}
             </span>
             {user?.department && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-                style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-700 text-sky-300">
                 {user.department}
               </span>
             )}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-300"
-              style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(52,211,153,0.2)' }}>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-700 text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-xs animate-pulse" />
               System Online
             </span>
           </div>
@@ -138,65 +121,54 @@ export default function Dashboard() {
       {stats && (
         <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {[
-            { label: 'Active Students', value: stats.totalUsers || 2450, icon: Users, gradient: 'from-mkce-500 to-mkce-700', iconBg: 'rgba(6,163,218,0.1)' },
-            { label: 'Student Chapters', value: stats.totalClubs || 18, icon: Zap, gradient: 'from-emerald-500 to-emerald-700', iconBg: 'rgba(16,185,129,0.1)' },
-            { label: 'Live Events', value: stats.totalEvents || 42, icon: Calendar, gradient: 'from-amber-400 to-amber-600', iconBg: 'rgba(245,158,11,0.1)' },
-            { label: 'Opportunities', value: stats.totalJobs || 28, icon: Briefcase, gradient: 'from-purple-500 to-purple-700', iconBg: 'rgba(139,92,246,0.1)' },
+            { label: 'Active Students', value: stats.totalUsers || 2450, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
+            { label: 'Student Chapters', value: stats.totalClubs || 18, icon: Zap, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' },
+            { label: 'Live Events', value: stats.totalEvents || 42, icon: Calendar, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' },
+            { label: 'Opportunities', value: stats.totalJobs || 28, icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
           ].map((item, i) => (
             <StaggerItem key={i}>
               <div className="card-premium p-5 group cursor-default">
                 <div className="flex items-center justify-between mb-4">
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105"
-                    style={{
-                      background: `linear-gradient(135deg, ${item.gradient.includes('mkce') ? '#06A3DA, #073f69' : item.gradient.includes('emerald') ? '#10b981, #059669' : item.gradient.includes('amber') ? '#f59e0b, #d97706' : '#8b5cf6, #7c3aed'})`,
-                      boxShadow: `0 4px 12px ${item.gradient.includes('mkce') ? 'rgba(6,163,218,0.25)' : item.gradient.includes('emerald') ? 'rgba(16,185,129,0.25)' : item.gradient.includes('amber') ? 'rgba(245,158,11,0.25)' : 'rgba(139,92,246,0.25)'}`,
-                    }}
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-xs transition-all duration-200 group-hover:scale-105 ${item.bg}`}
                   >
-                    <item.icon size={22} className="text-white" />
+                    <item.icon size={22} className={item.color} />
                   </div>
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center text-surface-400 group-hover:text-mkce-600 group-hover:bg-mkce-50/50 transition-all duration-200">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 group-hover:text-black group-hover:bg-zinc-100 transition-all duration-200">
                     <ArrowUpRight size={15} />
                   </div>
                 </div>
-                <p className="text-2xl sm:text-3xl font-display font-black text-mkce-900 tracking-tight leading-none">
+                <p className="text-2xl sm:text-3xl font-display font-black text-black tracking-tight leading-none">
                   <AnimatedCounter value={item.value} />
                 </p>
-                <p className="text-[11px] font-bold text-surface-500 mt-1.5 uppercase tracking-wider">{item.label}</p>
+                <p className="text-[11px] font-bold text-zinc-500 mt-1.5 uppercase tracking-wider">{item.label}</p>
               </div>
             </StaggerItem>
           ))}
         </StaggerContainer>
       )}
 
-      {/* ==================== QUICK ACTIONS ==================== */}
+      {/* ==================== QUICK ACTIONS IN HIGH CONTRAST ==================== */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         {[
-          { to: '/clubs', icon: Users, title: 'Student Chapters', desc: 'Join engineering clubs, technical symposiums, and project groups', gradient: 'linear-gradient(135deg, #073f69 0%, #06A3DA 100%)' },
-          { to: '/jobs', icon: Briefcase, title: 'Career Opportunities', desc: 'Browse verified campus internships, placements, and research projects', gradient: 'linear-gradient(135deg, #0b5a3c 0%, #10b981 100%)' },
-          { to: '/discussions', icon: TrendingUp, title: 'Peer Forum', desc: 'Collaborate with departmental peers and exchange technical insights', gradient: 'linear-gradient(135deg, #92400e 0%, #f59e0b 100%)' },
+          { to: '/clubs', icon: Users, title: 'Student Chapters', desc: 'Join engineering clubs, technical symposiums, and project groups' },
+          { to: '/jobs', icon: Briefcase, title: 'Career Opportunities', desc: 'Browse verified campus internships, placements, and research projects' },
+          { to: '/discussions', icon: TrendingUp, title: 'Peer Forum', desc: 'Collaborate with departmental peers and exchange technical insights' },
         ].map((item, i) => (
           <Link
             key={i}
             to={item.to}
-            className="block rounded-2xl p-6 text-white relative overflow-hidden group h-full transition-all duration-300 hover:-translate-y-1"
-            style={{
-              background: item.gradient,
-              boxShadow: '0 4px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
+            className="block rounded-3xl p-6 text-white bg-black border border-zinc-800 shadow-md relative overflow-hidden group h-full transition-all duration-200 hover:-translate-y-1 hover:border-zinc-700"
           >
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/[0.06] rounded-full -translate-y-1/2 translate-x-1/2 blur-lg pointer-events-none" />
             <div className="relative z-10 flex flex-col justify-between h-full">
               <div>
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
-                  style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}>
-                  <item.icon size={22} />
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center mb-4 bg-zinc-900 border border-zinc-700 text-white transition-all duration-200 group-hover:scale-105">
+                  <item.icon size={20} />
                 </div>
-                <h3 className="font-display font-bold text-lg tracking-tight">{item.title}</h3>
-                <p className="text-white/75 text-xs sm:text-sm mt-1.5 leading-relaxed">{item.desc}</p>
+                <h3 className="font-display font-black text-lg tracking-tight text-white">{item.title}</h3>
+                <p className="text-zinc-400 text-xs sm:text-sm mt-1.5 leading-relaxed font-medium">{item.desc}</p>
               </div>
-              <div className="flex items-center gap-1 text-xs font-bold text-white/80 mt-4 group-hover:translate-x-1 transition-transform duration-200">
+              <div className="flex items-center gap-1 text-xs font-bold text-zinc-300 mt-4 group-hover:translate-x-1 transition-transform duration-200">
                 <span>Enter Hub</span>
                 <ChevronRight size={14} />
               </div>
@@ -209,50 +181,46 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Upcoming Events */}
         <div className="card-premium p-6 flex flex-col">
-          <div className="flex items-center justify-between pb-4 border-b border-surface-100 mb-4">
+          <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-mkce-50 flex items-center justify-center text-mkce-600">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center">
                 <Calendar size={18} />
               </div>
-              <h2 className="font-display font-bold text-mkce-900 text-lg">Upcoming Events</h2>
+              <h2 className="font-display font-bold text-black text-lg">Upcoming Events</h2>
             </div>
-            <Link to="/events" className="text-xs font-bold text-mkce-600 hover:text-mkce-700 flex items-center gap-1 group transition-colors">
+            <Link to="/events" className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1 group transition-colors">
               View All <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
-          <div className="divide-y divide-surface-100/60 flex-1">
+          <div className="divide-y divide-zinc-100 flex-1">
             {recentEvents.length === 0 ? (
               <div className="p-10 text-center flex flex-col items-center justify-center h-full">
-                <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center text-surface-400 mb-2.5">
+                <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-400 mb-2.5">
                   <Calendar size={22} />
                 </div>
-                <p className="text-surface-600 text-sm font-semibold">No upcoming events</p>
-                <p className="text-surface-400 text-xs mt-0.5">Check back later or propose a new event!</p>
+                <p className="text-zinc-800 text-sm font-semibold">No upcoming events</p>
+                <p className="text-zinc-400 text-xs mt-0.5">Check back later or propose a new event!</p>
               </div>
             ) : (
               recentEvents.map((event) => (
-                <Link to="/events" key={event._id} className="flex items-center gap-4 py-3.5 hover:bg-surface-50/60 px-2 rounded-xl transition-colors group">
+                <Link to="/events" key={event._id} className="flex items-center gap-4 py-3.5 hover:bg-zinc-50 px-2 rounded-xl transition-colors group">
                   <div
-                    className="w-12 h-12 rounded-xl flex flex-col items-center justify-center shrink-0 text-white font-display group-hover:scale-105 transition-transform"
-                    style={{
-                      background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)',
-                      boxShadow: '0 2px 8px rgba(6,163,218,0.2)',
-                    }}
+                    className="w-12 h-12 rounded-xl flex flex-col items-center justify-center shrink-0 text-white font-display bg-black border border-zinc-800 group-hover:scale-105 transition-transform shadow-xs"
                   >
-                    <span className="text-[9px] uppercase font-bold tracking-wider opacity-80">{formatDateSafely(event.date, 'MMM')}</span>
-                    <span className="text-sm font-black leading-none">{formatDateSafely(event.date, 'dd')}</span>
+                    <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-400">{formatDateSafely(event.date, 'MMM')}</span>
+                    <span className="text-sm font-black leading-none text-white">{formatDateSafely(event.date, 'dd')}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm text-mkce-900 truncate group-hover:text-mkce-600 transition-colors">{event.title}</h3>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-surface-500">
-                      <span className="flex items-center gap-1">
-                        <Clock size={11} className="text-surface-400" />
+                    <h3 className="font-bold text-sm text-zinc-900 truncate group-hover:text-black transition-colors">{event.title}</h3>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                      <span className="flex items-center gap-1 text-zinc-600 font-medium">
+                        <Clock size={11} className="text-blue-500" />
                         {formatDateSafely(event.date, 'h:mm a')}
                       </span>
-                      {event.location && <span className="truncate max-w-[140px]">• {event.location}</span>}
+                      {event.location && <span className="truncate max-w-[140px] text-zinc-500">• {event.location}</span>}
                     </div>
                   </div>
-                  <ArrowUpRight size={15} className="text-surface-300 group-hover:text-mkce-500 transition-colors shrink-0" />
+                  <ArrowUpRight size={15} className="text-zinc-400 group-hover:text-black transition-colors shrink-0" />
                 </Link>
               ))
             )}
@@ -261,46 +229,42 @@ export default function Dashboard() {
 
         {/* Achievements */}
         <div className="card-premium p-6 flex flex-col">
-          <div className="flex items-center justify-between pb-4 border-b border-surface-100 mb-4">
+          <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-700">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center">
                 <Trophy size={18} />
               </div>
-              <h2 className="font-display font-bold text-mkce-900 text-lg">Recent Hall of Fame</h2>
+              <h2 className="font-display font-bold text-black text-lg">Recent Hall of Fame</h2>
             </div>
-            <Link to="/achievements" className="text-xs font-bold text-mkce-600 hover:text-mkce-700 flex items-center gap-1 group transition-colors">
+            <Link to="/achievements" className="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline flex items-center gap-1 group transition-colors">
               View All <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
-          <div className="divide-y divide-surface-100/60 flex-1">
+          <div className="divide-y divide-zinc-100 flex-1">
             {recentAchievements.length === 0 ? (
               <div className="p-10 text-center flex flex-col items-center justify-center h-full">
-                <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center text-surface-400 mb-2.5">
+                <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-400 mb-2.5">
                   <Trophy size={22} />
                 </div>
-                <p className="text-surface-600 text-sm font-semibold">No achievements posted yet</p>
-                <p className="text-surface-400 text-xs mt-0.5">Be the first to share a milestone!</p>
+                <p className="text-zinc-800 text-sm font-semibold">No achievements posted yet</p>
+                <p className="text-zinc-400 text-xs mt-0.5">Be the first to share a milestone!</p>
               </div>
             ) : (
               recentAchievements.map((a) => (
-                <div key={a._id} className="py-3.5 hover:bg-surface-50/60 px-2 rounded-xl transition-colors group">
+                <div key={a._id} className="py-3.5 hover:bg-zinc-50 px-2 rounded-xl transition-colors group">
                   <div className="flex items-start gap-3.5">
                     <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-white group-hover:scale-105 transition-transform"
-                      style={{
-                        background: 'linear-gradient(135deg, #f7ce58 0%, #d89a06 100%)',
-                        boxShadow: '0 2px 8px rgba(216,154,6,0.25)',
-                      }}
+                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-amber-600 bg-amber-50 border border-amber-200 group-hover:scale-105 transition-transform shadow-xs"
                     >
                       <Trophy size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm text-mkce-900 truncate">{a.title}</h3>
-                      <p className="text-xs text-surface-500 mt-0.5">by <span className="font-semibold text-mkce-700">{a.user?.name || 'Student'}</span></p>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-surface-400">
-                        <span className="text-mkce-600 font-semibold">{a.likes?.length || 0} Kudos</span>
-                        <span>•</span>
-                        <span>{a.comments?.length || 0} Comments</span>
+                      <h3 className="font-bold text-sm text-zinc-900 truncate">{a.title}</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">by <span className="font-bold text-black">{a.user?.name || 'Student'}</span></p>
+                      <div className="flex items-center gap-3 mt-1.5 text-xs font-semibold">
+                        <span className="text-rose-600 font-bold">{a.likes?.length || 0} Kudos</span>
+                        <span className="text-zinc-300">•</span>
+                        <span className="text-zinc-500">{a.comments?.length || 0} Comments</span>
                       </div>
                     </div>
                   </div>

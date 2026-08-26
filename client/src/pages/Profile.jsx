@@ -65,41 +65,38 @@ export default function Profile() {
   if (!profile) {
     return (
       <div className="card-premium p-12 text-center max-w-lg mx-auto">
-        <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-100 flex items-center justify-center text-surface-400">
+        <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-400">
           <User size={32} />
         </div>
-        <h3 className="font-display font-bold text-mkce-900 text-lg">Profile Not Found</h3>
-        <p className="text-surface-500 text-sm mt-1">The user profile does not exist or has been disabled.</p>
+        <h3 className="font-display font-bold text-black text-lg">Profile Not Found</h3>
+        <p className="text-zinc-500 text-sm mt-1 font-medium">The user profile does not exist or has been disabled.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+    <div className="max-w-4xl mx-auto space-y-8 font-sans text-zinc-900">
       <SEO title={`${profile.name} - Engineer Profile`} description={`View ${profile.name}'s engineering profile, skills, achievements, and activities at MKCE.`} keywords={`MKCE ${profile.name}, ${profile.department || 'MKCE'} Student, Engineering Portfolio`} canonical={`/profile/${targetId}`} />
 
-      {/* Premium Profile Hero */}
+      {/* Profile Hero */}
       <div className="card-premium overflow-hidden">
-        <div className="h-44 sm:h-52 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #010018 0%, #020024 20%, #09203f 45%, #073f69 70%, #06A3DA 95%, #60bbfa 100%)' }}>
-          <div className="absolute inset-0 bg-white/[0.03]" />
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white/[0.04] rounded-full blur-[80px]" />
-          <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-gold/8 rounded-full blur-[60px] pointer-events-none" />
+        <div className="h-44 sm:h-52 relative overflow-hidden bg-black border-b border-zinc-800">
+          <div className="absolute inset-0 bg-white/[0.02]" />
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-zinc-800/40 rounded-full blur-[80px]" />
         </div>
         <div className="px-8 pb-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 -mt-16 sm:-mt-20 relative z-10">
             <div className="flex items-end gap-5">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl border-4 border-white shadow-2xl flex items-center justify-center font-display font-black text-4xl text-white flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)', boxShadow: '0 8px 32px rgba(6,163,218,0.3)' }}>
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl border-4 border-white shadow-2xl flex items-center justify-center font-display font-black text-4xl text-white flex-shrink-0 bg-black">
                 {profile.name?.charAt(0) || 'U'}
               </div>
               <div className="pb-1">
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-display font-black text-mkce-900 tracking-tight">{profile.name}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-display font-black text-black tracking-tight">{profile.name}</h1>
                   <span className="badge-blue capitalize text-xs">{profile.role || 'Student'}</span>
                 </div>
-                <div className="flex items-center gap-2 mt-1 text-xs text-surface-500">
-                  <Mail size={13} className="text-mkce-500" /><span>{profile.email}</span>
+                <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500 font-medium">
+                  <Mail size={13} className="text-zinc-400" /><span>{profile.email}</span>
                 </div>
               </div>
             </div>
@@ -123,13 +120,13 @@ export default function Profile() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Academic Info */}
         <div className="card-premium p-6 sm:p-7">
-          <h2 className="section-heading flex items-center gap-2 mb-5"><User size={18} className="text-mkce-500" />Academic Information</h2>
+          <h2 className="section-heading flex items-center gap-2 mb-5"><User size={18} className="text-black" />Academic Information</h2>
           {editing ? (
             <div className="space-y-4">
-              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Full Name</label><input type="text" value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-mkce" /></div>
-              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Department</label><input type="text" value={form.department || ''} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-mkce" /></div>
-              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Year of Study</label><input type="number" value={form.year || ''} onChange={(e) => setForm({ ...form, year: e.target.value })} className="input-mkce" min="1" max="5" /></div>
-              <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Bio / About Me</label><textarea value={form.bio || ''} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="input-mkce resize-none" rows={3} /></div>
+              <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Full Name</label><input type="text" value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-mkce" /></div>
+              <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Department</label><input type="text" value={form.department || ''} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-mkce" /></div>
+              <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Year of Study</label><input type="number" value={form.year || ''} onChange={(e) => setForm({ ...form, year: e.target.value })} className="input-mkce" min="1" max="5" /></div>
+              <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Bio / About Me</label><textarea value={form.bio || ''} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="input-mkce resize-none" rows={3} /></div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -137,15 +134,15 @@ export default function Profile() {
                 { icon: Building2, label: 'Department', value: profile.department || 'Not specified' },
                 profile.year && { icon: BookOpen, label: 'Year of Study', value: `Year ${profile.year}` },
               ].filter(Boolean).map((item, i) => (
-                <div key={i} className="p-4 rounded-2xl flex items-center gap-3" style={{ background: 'rgba(248,250,252,0.6)', border: '1px solid rgba(226,232,240,0.4)' }}>
-                  <div className="w-10 h-10 rounded-xl bg-mkce-50 flex items-center justify-center text-mkce-600"><item.icon size={18} /></div>
-                  <div><p className="text-[10px] text-surface-400 font-bold uppercase tracking-wider">{item.label}</p><p className="text-sm font-bold text-mkce-900">{item.value}</p></div>
+                <div key={i} className="p-4 rounded-2xl flex items-center gap-3 bg-zinc-50 border border-zinc-200">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-zinc-200 flex items-center justify-center text-black shadow-xs"><item.icon size={18} /></div>
+                  <div><p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{item.label}</p><p className="text-sm font-bold text-black">{item.value}</p></div>
                 </div>
               ))}
               {profile.bio && (
-                <div className="p-4 rounded-2xl" style={{ background: 'rgba(248,250,252,0.6)', border: '1px solid rgba(226,232,240,0.4)' }}>
-                  <p className="text-[10px] text-surface-400 font-bold uppercase tracking-wider mb-1">About</p>
-                  <p className="text-xs sm:text-sm text-surface-700 leading-relaxed">{profile.bio}</p>
+                <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200">
+                  <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-1">About</p>
+                  <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed font-normal">{profile.bio}</p>
                 </div>
               )}
             </div>
@@ -154,14 +151,13 @@ export default function Profile() {
 
         {/* Verified Status & Skills */}
         <div className="space-y-6">
-          <div className="rounded-3xl p-6 text-white flex items-center justify-between transition-all duration-300 hover:-translate-y-1"
-            style={{ background: 'linear-gradient(135deg, #020024 0%, #09203f 35%, #073f69 70%, #06A3DA 100%)', boxShadow: '0 8px 24px -4px rgba(6,163,218,0.25)' }}>
+          <div className="rounded-3xl p-6 text-white flex items-center justify-between transition-all duration-200 hover:-translate-y-1 bg-black border border-zinc-800 shadow-md">
             <div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', color: '#f9d423' }}>Campus Verified</span>
-              <h3 className="text-xl font-display font-black mt-2">Verified Member</h3>
-              <p className="text-xs text-mkce-200/70 mt-1 max-w-[200px]">Active student on the MKCE digital network.</p>
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-700 text-amber-400">Campus Verified</span>
+              <h3 className="text-xl font-display font-black mt-2 text-white">Verified Member</h3>
+              <p className="text-xs text-zinc-400 mt-1 max-w-[200px] font-medium">Active student on the MKCE digital network.</p>
             </div>
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-gold" style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', boxShadow: '0 4px 12px rgba(247,206,88,0.2)' }}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-emerald-400 bg-zinc-900 border border-zinc-700">
               <ShieldCheck size={36} />
             </div>
           </div>
@@ -171,11 +167,11 @@ export default function Profile() {
             {profile.skills?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {profile.skills.map((skill, i) => (
-                  <span key={i} className="px-3.5 py-1.5 rounded-xl bg-mkce-50 text-mkce-700 text-xs font-bold border border-mkce-200/60">{skill}</span>
+                  <span key={i} className="px-3.5 py-1.5 rounded-xl bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/80">{skill}</span>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-surface-400">No skills added yet.</p>
+              <p className="text-xs text-zinc-400 font-medium">No skills added yet.</p>
             )}
           </div>
         </div>

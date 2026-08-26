@@ -70,10 +70,10 @@ export default function DiscussionBoard() {
 
   const getBoardTypeBadge = (type) => {
     switch (type) {
-      case 'club': return 'bg-amber-50 text-amber-700 border-amber-200/80';
-      case 'department': return 'bg-emerald-50 text-emerald-700 border-emerald-200/80';
-      case 'career': return 'bg-purple-50 text-purple-700 border-purple-200/80';
-      default: return 'bg-mkce-50 text-mkce-700 border-mkce-200/80';
+      case 'club': return 'bg-purple-50 text-purple-700 border-purple-200';
+      case 'department': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'career': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      default: return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     }
   };
 
@@ -89,7 +89,7 @@ export default function DiscussionBoard() {
   const canPin = user?.role === 'admin' || user?.role === 'hod' || user?.role === 'leader';
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto font-sans">
+    <div className="space-y-6 max-w-5xl mx-auto font-sans text-zinc-900">
       <SEO title="Engineering Forums & Student Discussions" description="Join active discussions, ask technical questions, collaborate on project ideas, and interact with departmental peers at MKCE." keywords="MKCE Discussions, Engineering Forum Karur, Student Tech Forum" canonical="/discussions" />
 
       {/* Header */}
@@ -97,9 +97,9 @@ export default function DiscussionBoard() {
         <div>
           <div className="flex items-center gap-2 mb-1"><span className="badge-blue"><Sparkles size={11} className="mr-1" />Interactive Community Forum</span></div>
           <h1 className="page-heading">Discussion Board</h1>
-          <p className="text-surface-500 text-sm mt-1">Exchange engineering perspectives, ask peer questions, and collaborate across departments.</p>
+          <p className="text-zinc-500 text-sm mt-1">Exchange engineering perspectives, ask peer questions, and collaborate across departments.</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto shimmer-btn"><Plus size={18} /><span>Start Thread</span></button>
+        <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto"><Plus size={18} /><span>Start Thread</span></button>
       </div>
 
       {/* Channel Tabs & Search */}
@@ -110,8 +110,8 @@ export default function DiscussionBoard() {
             const active = selectedChannel === ch.id;
             return (
               <button key={ch.id} onClick={() => setSelectedChannel(ch.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
-                  active ? 'bg-mkce-700 text-white shadow-sm' : 'bg-white text-surface-600 hover:bg-surface-100/80 border border-surface-200/80'
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-150 ${
+                  active ? 'bg-black text-white shadow-xs' : 'bg-white text-zinc-600 hover:bg-zinc-100 hover:text-black border border-zinc-200'
                 }`}>
                 <Icon size={14} /><span>{ch.label}</span>
               </button>
@@ -119,7 +119,7 @@ export default function DiscussionBoard() {
           })}
         </div>
         <form onSubmit={handleSearchSubmit} className="relative min-w-[240px]">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search discussions..." className="input-mkce pl-9 py-2 text-xs w-full" />
         </form>
       </div>
@@ -127,18 +127,18 @@ export default function DiscussionBoard() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.2)' }}>
-              <div className="p-6 border-b border-surface-100 text-white flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)' }}>
-                <div><h2 className="font-display font-bold text-lg">Start New Discussion</h2><p className="text-xs text-mkce-200/80 mt-0.5">Share with your branch, club, or the full campus</p></div>
-                <button onClick={() => setShowCreate(false)} className="p-1 text-white/60 hover:text-white rounded-lg"><X size={20} /></button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden border border-zinc-200 shadow-2xl">
+              <div className="p-6 border-b border-zinc-800 text-white flex items-center justify-between bg-black">
+                <div><h2 className="font-display font-bold text-lg text-white">Start New Discussion</h2><p className="text-xs text-zinc-400 mt-0.5">Share with your branch, club, or the full campus</p></div>
+                <button onClick={() => setShowCreate(false)} className="p-1 text-zinc-400 hover:text-white rounded-lg"><X size={20} /></button>
               </div>
               <form onSubmit={createPost} className="p-6 space-y-4">
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Topic Title</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="input-mkce" placeholder="e.g. Best practices for optimizing PyTorch models" /></div>
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Discussion Content</label><textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required className="input-mkce resize-none" placeholder="Elaborate on your idea, question, or discussion point..." rows={4} /></div>
-                <div><label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Board Channel</label>
-                  <select value={form.boardType} onChange={(e) => setForm({ ...form, boardType: e.target.value })} className="input-mkce cursor-pointer">
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Topic Title</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="input-mkce" placeholder="e.g. Best practices for optimizing PyTorch models" /></div>
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Discussion Content</label><textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required className="input-mkce resize-none" placeholder="Elaborate on your idea, question, or discussion point..." rows={4} /></div>
+                <div><label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Board Channel</label>
+                  <select value={form.boardType} onChange={(e) => setForm({ ...form, boardType: e.target.value })} className="input-mkce cursor-pointer font-medium">
                     <option value="general">General Campus Discussion</option>
                     <option value="department">Department Technical ({user?.department || 'Department'})</option>
                     <option value="club">Clubs & Student Chapters</option>
@@ -147,7 +147,7 @@ export default function DiscussionBoard() {
                 </div>
                 <div className="flex gap-3 pt-3">
                   <button type="submit" className="btn-mkce flex-1 py-3 text-sm font-bold">Publish Thread</button>
-                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm">Cancel</button>
+                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm font-bold">Cancel</button>
                 </div>
               </form>
             </motion.div>
@@ -160,9 +160,9 @@ export default function DiscussionBoard() {
         <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="skeleton rounded-3xl h-48" />)}</div>
       ) : posts.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <div className="w-16 h-16 bg-mkce-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-mkce-600"><MessageSquare size={32} /></div>
-          <h3 className="font-display font-bold text-mkce-900 text-lg">No Discussions Found</h3>
-          <p className="text-surface-500 text-sm mt-1">Be the catalyst and start the first conversation on campus!</p>
+          <div className="w-16 h-16 bg-zinc-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-zinc-400"><MessageSquare size={32} /></div>
+          <h3 className="font-display font-bold text-black text-lg">No Discussions Found</h3>
+          <p className="text-zinc-500 text-sm mt-1 font-medium">Be the catalyst and start the first conversation on campus!</p>
           <button onClick={() => setShowCreate(true)} className="btn-mkce mt-4 text-xs inline-flex items-center gap-1.5"><Plus size={15} /><span>Create First Thread</span></button>
         </div>
       ) : (
@@ -175,39 +175,38 @@ export default function DiscussionBoard() {
               <StaggerItem key={post._id}>
                 <div className="card-premium p-6 sm:p-7">
                   <div className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-bold text-white text-base shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #06A3DA 0%, #073f69 100%)', boxShadow: '0 2px 8px rgba(6,163,218,0.2)' }}>
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center font-display font-black text-white text-base shrink-0 bg-black border border-zinc-800 shadow-xs">
                       {authorInitial}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-display font-bold text-lg text-mkce-900 leading-snug">{post.title}</h3>
-                          {post.isPinned && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/80 text-[10px] font-extrabold"><Pin size={11} className="fill-current" />Pinned</span>}
+                          <h3 className="font-display font-bold text-lg text-zinc-900 leading-snug">{post.title}</h3>
+                          {post.isPinned && <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-extrabold"><Pin size={11} className="fill-current text-amber-600" />Pinned</span>}
                           <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase tracking-wider ${getBoardTypeBadge(post.boardType)}`}>{post.boardType || 'General'}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          {canPin && <button onClick={() => pinPost(post._id)} className={`p-1.5 rounded-lg hover:bg-surface-100 transition-colors ${post.isPinned ? 'text-amber-600' : 'text-surface-400 hover:text-amber-600'}`} title={post.isPinned ? 'Unpin' : 'Pin'}><Pin size={14} /></button>}
-                          {(isAuthor || user?.role === 'admin') && <button onClick={() => deletePost(post._id)} className="p-1.5 rounded-lg hover:bg-red-50 text-surface-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={14} /></button>}
+                          {canPin && <button onClick={() => pinPost(post._id)} className={`p-1.5 rounded-lg hover:bg-zinc-100 transition-colors ${post.isPinned ? 'text-amber-600 font-bold' : 'text-zinc-400 hover:text-amber-600'}`} title={post.isPinned ? 'Unpin' : 'Pin'}><Pin size={14} /></button>}
+                          {(isAuthor || user?.role === 'admin') && <button onClick={() => deletePost(post._id)} className="p-1.5 rounded-lg hover:bg-red-50 text-zinc-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 size={14} /></button>}
                         </div>
                       </div>
-                      <p className="text-xs text-surface-500 mt-1">Posted by <span className="font-semibold text-mkce-800">{post.author?.name || 'Campus Member'}</span>{post.author?.department && <span className="text-surface-400"> ({post.author.department})</span>} • <span>{formatDateSafely(post.createdAt)}</span></p>
-                      <p className="text-surface-700 text-sm mt-3 leading-relaxed whitespace-pre-wrap">{post.content}</p>
-                      <div className="flex items-center gap-5 mt-4 pt-3.5 border-t border-surface-100/60">
-                        <button onClick={() => likePost(post._id)} className={`flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${isLiked ? 'text-red-500' : 'text-surface-500 hover:text-red-500'}`}>
+                      <p className="text-xs text-zinc-500 mt-1">Posted by <span className="font-bold text-black">{post.author?.name || 'Campus Member'}</span>{post.author?.department && <span className="text-zinc-400"> ({post.author.department})</span>} • <span>{formatDateSafely(post.createdAt)}</span></p>
+                      <p className="text-zinc-700 text-sm mt-3 leading-relaxed whitespace-pre-wrap font-normal">{post.content}</p>
+                      <div className="flex items-center gap-5 mt-4 pt-3.5 border-t border-zinc-100">
+                        <button onClick={() => likePost(post._id)} className={`flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${isLiked ? 'text-rose-600' : 'text-zinc-500 hover:text-rose-600'}`}>
                           <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} strokeWidth={2} /><span>{post.likes?.length || 0} Likes</span>
                         </button>
-                        <button onClick={() => toggleComments(post._id)} className="flex items-center gap-1.5 text-xs font-bold text-surface-500 hover:text-mkce-600 transition-colors">
+                        <button onClick={() => toggleComments(post._id)} className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-blue-600 transition-colors">
                           <MessageCircle size={16} /><span>{post.comments?.length || 0} Replies</span>
                         </button>
-                        {!isAuthor && <button onClick={() => reportPost(post._id)} className="flex items-center gap-1 text-xs text-surface-400 hover:text-red-500 transition-colors ml-auto"><Flag size={13} /><span className="hidden sm:inline">Report</span></button>}
+                        {!isAuthor && <button onClick={() => reportPost(post._id)} className="flex items-center gap-1 text-xs text-zinc-400 hover:text-red-500 transition-colors ml-auto"><Flag size={13} /><span className="hidden sm:inline">Report</span></button>}
                       </div>
                       {expandedComments[post._id] && post.comments?.length > 0 && (
-                        <div className="mt-4 space-y-2.5 p-4 rounded-2xl border border-surface-100/60" style={{ background: 'rgba(248,250,252,0.6)' }}>
+                        <div className="mt-4 space-y-2.5 p-4 rounded-2xl border border-zinc-200 bg-zinc-50">
                           {post.comments.map((comment, i) => (
                             <div key={comment._id || i} className="text-xs flex items-start gap-2.5">
-                              <div className="w-6 h-6 rounded-lg bg-mkce-700 text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">{comment.author?.name?.charAt(0) || 'P'}</div>
-                              <div className="flex-1 min-w-0"><span className="font-bold text-mkce-900 mr-1.5">{comment.author?.name || 'Campus Member'}:</span><span className="text-surface-700 leading-relaxed">{comment.content}</span></div>
+                              <div className="w-6 h-6 rounded-lg bg-black text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">{comment.author?.name?.charAt(0) || 'P'}</div>
+                              <div className="flex-1 min-w-0"><span className="font-bold text-black mr-1.5">{comment.author?.name || 'Campus Member'}:</span><span className="text-zinc-700 leading-relaxed">{comment.content}</span></div>
                             </div>
                           ))}
                         </div>

@@ -65,7 +65,7 @@ export default function Clubs() {
   const canCreate = user?.role === 'leader' || user?.role === 'admin' || user?.role === 'hod';
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto font-sans text-zinc-900">
       <SEO title="Student Clubs & Technical Chapters" description="Discover and join engineering student chapters, robotics clubs, AI research groups, and cultural associations at M. Kumarasamy College of Engineering." keywords="MKCE Clubs, Student Chapters, IEEE MKCE, Robotics Club Karur, Engineering Clubs Tamil Nadu" canonical="/clubs" />
 
       {/* Header */}
@@ -75,10 +75,10 @@ export default function Clubs() {
             <span className="badge-blue"><Sparkles size={11} className="mr-1" />Student Chapters & Guilds</span>
           </div>
           <h1 className="page-heading">Campus Clubs</h1>
-          <p className="text-surface-500 text-sm mt-1">Discover, join, and lead technical & cultural communities at MKCE.</p>
+          <p className="text-zinc-500 text-sm mt-1">Discover, join, and lead technical & cultural communities at MKCE.</p>
         </div>
         {canCreate && (
-          <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto shimmer-btn">
+          <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto">
             <Plus size={18} /><span>Create Club</span>
           </button>
         )}
@@ -87,16 +87,16 @@ export default function Clubs() {
       {/* Search & Filters */}
       <div className="space-y-4">
         <div className="relative">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
-          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="input-mkce pl-11 py-3.5" placeholder="Search clubs by name, mission, or department..." style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }} />
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="input-mkce pl-11 py-3.5" placeholder="Search clubs by name, mission, or department..." />
         </div>
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {departments.map((dept) => (
             <button key={dept} onClick={() => setSelectedDept(dept)}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-150 whitespace-nowrap ${
                 selectedDept === dept
-                  ? 'bg-mkce-600 text-white shadow-[0_2px_8px_rgba(6,163,218,0.3)]'
-                  : 'bg-white text-surface-600 border border-surface-200/80 hover:border-mkce-300 hover:text-mkce-700'
+                  ? 'bg-black text-white shadow-xs'
+                  : 'bg-white text-zinc-700 border border-zinc-200 hover:border-black hover:text-black'
               }`}>
               {dept}
             </button>
@@ -107,30 +107,29 @@ export default function Clubs() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(226,232,240,0.3)' }}>
-              <div className="p-6 border-b border-surface-100 text-white flex items-center justify-between"
-                style={{ background: 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)' }}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden border border-zinc-200 shadow-2xl">
+              <div className="p-6 border-b border-zinc-800 text-white flex items-center justify-between bg-black">
                 <div>
-                  <h2 className="font-display font-bold text-lg">Create New Campus Club</h2>
-                  <p className="text-xs text-mkce-200/80 mt-0.5">Empower fellow students with workshops and initiatives</p>
+                  <h2 className="font-display font-bold text-lg text-white">Create New Campus Club</h2>
+                  <p className="text-xs text-zinc-400 mt-0.5 font-medium">Empower fellow students with workshops and initiatives</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <Building size={20} className="text-mkce-300" />
+                <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center text-white">
+                  <Building size={20} />
                 </div>
               </div>
               <form onSubmit={createClub} className="p-6 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Club Name</label>
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Club Name</label>
                   <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="input-mkce" placeholder="e.g. AI & Robotics Research Club" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Description & Goals</label>
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Description & Goals</label>
                   <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-mkce resize-none" placeholder="Describe what your club aims to achieve..." rows={3} />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Associated Department</label>
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Associated Department</label>
                   <input type="text" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="input-mkce" placeholder="e.g. Computer Science and Engineering" />
                 </div>
                 <div className="flex gap-3 pt-3">
@@ -150,11 +149,11 @@ export default function Clubs() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-surface-100 flex items-center justify-center text-surface-400">
+          <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-400">
             <Users size={32} />
           </div>
-          <h3 className="font-display font-bold text-mkce-900 text-lg">No clubs found</h3>
-          <p className="text-surface-500 text-sm mt-1">Try adjusting your search query or department filter.</p>
+          <h3 className="font-display font-bold text-black text-lg">No clubs found</h3>
+          <p className="text-zinc-500 text-sm mt-1 font-medium">Try adjusting your search query or department filter.</p>
         </div>
       ) : (
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -164,39 +163,36 @@ export default function Clubs() {
               <StaggerItem key={club._id} className="h-full">
                 <div className="card-premium flex flex-col h-full overflow-hidden group">
                   {/* Header Banner */}
-                  <div className="h-32 relative flex items-center justify-between px-6 text-white overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, #020024 0%, #09203f 35%, #073f69 70%, #06A3DA 100%)' }}>
-                    <div className="absolute inset-0 bg-white/[0.03]" />
+                  <div className="h-28 relative flex items-center justify-between px-6 text-white overflow-hidden bg-black border-b border-zinc-800">
                     <div className="relative z-10">
-                      <span className="text-3xl font-display font-black tracking-wider text-white/90 drop-shadow-md">
+                      <span className="text-3xl font-display font-black tracking-wider text-white">
                         {club.name.substring(0, 2).toUpperCase()}
                       </span>
                     </div>
                     {club.department && (
-                      <span className="relative z-10 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                        style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                      <span className="relative z-10 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-700 text-zinc-300">
                         {club.department}
                       </span>
                     )}
                   </div>
 
-                  {/* Body */}
+                    {/* Body */}
                   <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div>
                       <Link to={`/clubs/${club._id}`}>
-                        <h3 className="font-display font-extrabold text-lg text-mkce-900 group-hover:text-mkce-600 transition-colors line-clamp-1">{club.name}</h3>
+                        <h3 className="font-display font-extrabold text-lg text-zinc-900 group-hover:text-black transition-colors line-clamp-1">{club.name}</h3>
                       </Link>
-                      <p className="text-xs sm:text-sm text-surface-500 mt-2 line-clamp-2 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-zinc-500 mt-2 line-clamp-2 leading-relaxed font-medium">
                         {club.description || 'Dedicated to advancing student initiatives, workshops, and competitive projects.'}
                       </p>
                     </div>
-                    <div className="pt-3 border-t border-surface-100/60">
-                      <div className="flex items-center justify-between text-xs text-surface-500 mb-4">
-                        <span className="flex items-center gap-1.5 font-semibold text-mkce-700">
-                          <Users size={15} className="text-mkce-500" />{club.members?.length || 0} Members
+                    <div className="pt-3 border-t border-zinc-100">
+                      <div className="flex items-center justify-between text-xs text-zinc-500 mb-4">
+                        <span className="flex items-center gap-1.5 font-bold text-zinc-800">
+                          <Users size={15} className="text-blue-600" />{club.members?.length || 0} Members
                         </span>
                         {isMember && (
-                          <span className="inline-flex items-center gap-1 text-emerald-600 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
+                          <span className="inline-flex items-center gap-1 text-emerald-700 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                             <CheckCircle2 size={12} />Member
                           </span>
                         )}

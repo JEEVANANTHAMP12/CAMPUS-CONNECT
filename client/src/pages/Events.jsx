@@ -57,7 +57,7 @@ export default function Events() {
   const isAttending = (event) => event.attendees?.some((a) => a._id === user?.id || a === user?.id || a?.id === user?.id);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto font-sans">
+    <div className="space-y-8 max-w-7xl mx-auto font-sans text-zinc-900">
       <SEO title="Upcoming Campus Events, Hackathons & Workshops" description="Stay updated with upcoming technical symposiums, hackathons, guest lectures, and cultural fests at M. Kumarasamy College of Engineering, Karur." keywords="MKCE Events, Engineering Hackathons Karur, Technical Symposium MKCE, College Workshops Tamil Nadu" canonical="/events" />
 
       {/* Header */}
@@ -67,10 +67,10 @@ export default function Events() {
             <span className="badge-blue"><Sparkles size={11} className="mr-1" />Live Campus Schedule</span>
           </div>
           <h1 className="page-heading">Upcoming Events</h1>
-          <p className="text-surface-500 text-sm mt-1">Participate in tech symposiums, hackathons, guest lectures, and club meetups.</p>
+          <p className="text-zinc-500 text-sm mt-1">Participate in tech symposiums, hackathons, guest lectures, and club meetups.</p>
         </div>
         {(user?.role === 'admin' || user?.role === 'hod' || user?.role === 'leader') && (
-          <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto shimmer-btn">
+          <button onClick={() => setShowCreate(true)} className="btn-mkce flex items-center gap-2 self-start sm:self-auto">
             <Plus size={18} /><span>Create Event</span>
           </button>
         )}
@@ -79,47 +79,46 @@ export default function Events() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(226,232,240,0.3)' }}>
-              <div className="p-6 border-b border-surface-100 text-white flex items-center justify-between"
-                style={{ background: 'linear-gradient(135deg, #09203f 0%, #073f69 50%, #06A3DA 100%)' }}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.97, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 20 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-lg overflow-hidden border border-zinc-200 shadow-2xl">
+              <div className="p-6 border-b border-zinc-800 text-white flex items-center justify-between bg-black">
                 <div>
-                  <h2 className="font-display font-bold text-lg">Schedule Campus Event</h2>
-                  <p className="text-xs text-mkce-200/80 mt-0.5">Post an official event or workshop for students</p>
+                  <h2 className="font-display font-bold text-lg text-white">Schedule Campus Event</h2>
+                  <p className="text-xs text-zinc-400 mt-0.5">Post an official event or workshop for students</p>
                 </div>
-                <button onClick={() => setShowCreate(false)} className="p-1 text-white/60 hover:text-white"><X size={20} /></button>
+                <button onClick={() => setShowCreate(false)} className="p-1 text-zinc-400 hover:text-white"><X size={20} /></button>
               </div>
               <form onSubmit={createEvent} className="p-6 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Event Title</label>
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Event Title</label>
                   <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="input-mkce" placeholder="e.g. Annual AI Hackathon 2026" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Description & Agenda</label>
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Description & Agenda</label>
                   <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-mkce resize-none" placeholder="Provide details regarding the agenda, prerequisites, etc." rows={3} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Date & Time</label>
-                    <input type="datetime-local" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="input-mkce" />
+                    <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Date & Time</label>
+                    <input type="datetime-local" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="input-mkce font-medium" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Venue / Link</label>
+                    <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Venue / Link</label>
                     <input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="input-mkce" placeholder="e.g. Audi 2 / Virtual" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-mkce-900 uppercase tracking-wider mb-2">Target Audience</label>
-                  <select value={form.targetAudience} onChange={(e) => setForm({ ...form, targetAudience: e.target.value })} className="input-mkce cursor-pointer">
+                  <label className="block text-xs font-bold text-black uppercase tracking-wider mb-2">Target Audience</label>
+                  <select value={form.targetAudience} onChange={(e) => setForm({ ...form, targetAudience: e.target.value })} className="input-mkce cursor-pointer font-medium">
                     <option value="all">Open to All Departments</option>
                     <option value="department">Specific Department</option>
                     <option value="club">Club Members Only</option>
                   </select>
                 </div>
                 <div className="flex gap-3 pt-3">
-                  <button type="submit" className="btn-mkce flex-1 py-3 text-sm">Publish Event</button>
-                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm">Cancel</button>
+                  <button type="submit" className="btn-mkce flex-1 py-3 text-sm font-bold">Publish Event</button>
+                  <button type="button" onClick={() => setShowCreate(false)} className="btn-secondary flex-1 py-3 text-sm font-bold">Cancel</button>
                 </div>
               </form>
             </motion.div>
@@ -134,11 +133,11 @@ export default function Events() {
         </div>
       ) : events.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <div className="w-16 h-16 bg-mkce-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-mkce-600">
+          <div className="w-16 h-16 bg-zinc-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-zinc-400">
             <CalendarDays size={32} />
           </div>
-          <h3 className="font-display font-bold text-mkce-900 text-lg">No Events Scheduled</h3>
-          <p className="text-surface-500 text-sm mt-1">Be the first to create and host a campus event!</p>
+          <h3 className="font-display font-bold text-black text-lg">No Events Scheduled</h3>
+          <p className="text-zinc-500 text-sm mt-1">Be the first to create and host a campus event!</p>
         </div>
       ) : (
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -148,24 +147,21 @@ export default function Events() {
               <StaggerItem key={event._id} className="h-full">
                 <div className="card-premium flex flex-col h-full overflow-hidden group">
                   {/* Header Banner */}
-                  <div className="h-36 relative p-6 flex flex-col justify-between text-white overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, #020024 0%, #09203f 35%, #073f69 70%, #06A3DA 100%)' }}>
-                    <div className="absolute inset-0 bg-white/[0.03]" />
+                  <div className="h-32 relative p-6 flex flex-col justify-between text-white overflow-hidden bg-black border-b border-zinc-800">
                     <div className="relative z-10 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                        style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-700 text-zinc-300">
                         <Calendar size={12} />
                         <span>{format(new Date(event.date), 'EEE, MMM d')}</span>
                       </div>
                       {attending && (
-                        <span className="px-3 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
-                          <CheckCircle2 size={12} />Attending
+                        <span className="px-3 py-1 rounded-full bg-zinc-900 text-emerald-400 border border-zinc-700 text-[10px] font-black flex items-center gap-1 shadow-xs">
+                          <CheckCircle2 size={12} className="text-emerald-400" />Attending
                         </span>
                       )}
                     </div>
                     <div className="relative z-10">
-                      <span className="text-2xl font-display font-black text-white/90">
-                        {format(new Date(event.date), 'dd')} <span className="text-sm font-semibold uppercase">{format(new Date(event.date), 'MMMM')}</span>
+                      <span className="text-2xl font-display font-black text-white">
+                        {format(new Date(event.date), 'dd')} <span className="text-sm font-semibold uppercase text-zinc-400">{format(new Date(event.date), 'MMMM')}</span>
                       </span>
                     </div>
                   </div>
@@ -173,20 +169,20 @@ export default function Events() {
                   {/* Body */}
                   <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      <h3 className="font-display font-extrabold text-lg text-mkce-900 group-hover:text-mkce-600 transition-colors line-clamp-1">{event.title}</h3>
-                      <p className="text-xs sm:text-sm text-surface-500 mt-2 line-clamp-2 leading-relaxed">{event.description || 'Join us for this exciting campus event.'}</p>
+                      <h3 className="font-display font-extrabold text-lg text-zinc-900 group-hover:text-black transition-colors line-clamp-1">{event.title}</h3>
+                      <p className="text-xs sm:text-sm text-zinc-500 mt-2 line-clamp-2 leading-relaxed">{event.description || 'Join us for this exciting campus event.'}</p>
                     </div>
-                    <div className="space-y-2 text-xs text-surface-500 pt-2 border-t border-surface-100/60">
-                      <div className="flex items-center gap-2 font-medium text-mkce-700">
-                        <Clock size={14} className="text-mkce-500" /><span>{format(new Date(event.date), 'h:mm a')}</span>
+                    <div className="space-y-2 text-xs text-zinc-500 pt-2 border-t border-zinc-100">
+                      <div className="flex items-center gap-2 font-semibold text-black">
+                        <Clock size={14} className="text-blue-500" /><span>{format(new Date(event.date), 'h:mm a')}</span>
                       </div>
-                      <div className="flex items-center gap-2 font-medium text-surface-600">
+                      <div className="flex items-center gap-2 font-medium text-zinc-600">
                         <MapPin size={14} className="text-amber-500" /><span className="truncate">{event.location || 'College Auditorium'}</span>
                       </div>
                     </div>
-                    <div className="pt-2 border-t border-surface-100/60 flex items-center justify-between gap-3">
-                      <span className="text-xs font-bold text-surface-500 flex items-center gap-1">
-                        <Users size={14} className="text-mkce-500" />{event.attendees?.length || 0} RSVPs
+                    <div className="pt-2 border-t border-zinc-100 flex items-center justify-between gap-3">
+                      <span className="text-xs font-bold text-zinc-700 flex items-center gap-1">
+                        <Users size={14} className="text-blue-600" />{event.attendees?.length || 0} RSVPs
                       </span>
                       {attending ? (
                         <button onClick={() => cancelRsvp(event._id)} className="btn-danger text-xs px-3.5 py-2 font-bold">Cancel RSVP</button>
