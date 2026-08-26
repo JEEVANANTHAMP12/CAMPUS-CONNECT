@@ -13,7 +13,8 @@ const connectDB = async () => {
     logger.info('Supabase Postgres connected');
     return supabase;
   } catch (err) {
-    logger.error(`Supabase connection error: ${err.message}. Retrying in 5 seconds...`);
+    const detail = err?.message || err?.details || err?.hint || err?.code || JSON.stringify(err) || 'Unknown error';
+    logger.error(`Supabase connection error: ${detail}. Retrying in 5 seconds...`);
     setTimeout(connectDB, 5000);
   }
 };
