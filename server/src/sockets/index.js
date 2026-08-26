@@ -19,14 +19,17 @@ const initSockets = (io) => {
   io.use(async (socket, next) => {
     try {
       const token = getToken(socket);
-      if (!token) return next(new Error('Not authorized'));
+      if (!token) return next(new Error('Not authorized: missing token'));
       const decoded = jwt.verify(token, env.jwtSecret);
-      const user = await maybeOne(supabase.from('users').select('id,name,role,is_active').eq('id', decoded.id));
-      if (!user || !user.isActive) return next(new Error('Not authorized'));
-      socket.userId = user.id;
-      socket.userName = user.name;
+      const row = await maybeOne(supabase.from('users').select('id,name,role,is_active').eq('id', decoded.id));
+      // maybeOne returns raw row with snake_case, not doc-mapped
+      const isActive = row?.is_active ?? row?.isActive;
+      if (!row || isActive === false) return next(new Error('Not authorized: user inactive'));
+      socket.userId = row.id;
+      socket.userName = row.name;
       next();
-    } catch {
+    } catch (err) {
+      logger.debug(`Socket auth failed: ${err.message}`);
       next(new Error('Not authorized'));
     }
   });
