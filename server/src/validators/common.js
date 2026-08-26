@@ -1,7 +1,7 @@
 const { param, query, body } = require('express-validator');
 
 const mongoId = (name = 'id') =>
-  param(name).isMongoId().withMessage(`Invalid ${name}`);
+  param(name).isUUID().withMessage(`Invalid ${name}`);
 
 const pagination = [
   query('page').optional().isInt({ min: 1 }).toInt(),

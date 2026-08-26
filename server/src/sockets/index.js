@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const logger = require('../config/logger');
-const User = require('../models/User');
+const { supabase, maybeOne } = require('../data');
 
 const onlineUsers = new Map();
 
@@ -21,9 +21,9 @@ const initSockets = (io) => {
       const token = getToken(socket);
       if (!token) return next(new Error('Not authorized'));
       const decoded = jwt.verify(token, env.jwtSecret);
-      const user = await User.findById(decoded.id).select('name role isActive');
+      const user = await maybeOne(supabase.from('users').select('id,name,role,is_active').eq('id', decoded.id));
       if (!user || !user.isActive) return next(new Error('Not authorized'));
-      socket.userId = user._id.toString();
+      socket.userId = user.id;
       socket.userName = user.name;
       next();
     } catch {

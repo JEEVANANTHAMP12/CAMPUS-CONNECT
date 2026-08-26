@@ -1,7 +1,8 @@
 const env = require('../config/env');
 
 const sendTokenResponse = (user, statusCode, res) => {
-  const token = user.getSignedJwtToken();
+  const jwt = require('jsonwebtoken');
+  const token = jwt.sign({ id: user.id || user._id, role: user.role }, env.jwtSecret, { expiresIn: env.jwtExpire });
 
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -22,7 +23,7 @@ const sendTokenResponse = (user, statusCode, res) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user.id || user._id,
         name: user.name,
         email: user.email,
         role: user.role,

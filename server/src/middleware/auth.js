@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { supabase, maybeOne, publicUser } = require('../data');
 const env = require('../config/env');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
@@ -18,11 +18,11 @@ exports.protect = asyncHandler(async (req, res, next) => {
   if (!token) throw ApiError.unauthorized();
 
   const decoded = jwt.verify(token, env.jwtSecret);
-  const user = await User.findById(decoded.id);
+  const user = publicUser(await maybeOne(supabase.from('users').select('*').eq('id', decoded.id)));
 
   if (!user) throw ApiError.unauthorized('User not found');
   if (!user.isActive) throw ApiError.forbidden('Account is disabled');
-  if (user.changedPasswordAfter(decoded.iat)) {
+  if (user.passwordChangedAt && new Date(user.passwordChangedAt).getTime() / 1000 > decoded.iat) {
     throw ApiError.unauthorized('Password recently changed. Please log in again');
   }
 
@@ -42,7 +42,7 @@ exports.optionalAuth = asyncHandler(async (req, res, next) => {
   if (!token) return next();
   try {
     const decoded = jwt.verify(token, env.jwtSecret);
-    req.user = await User.findById(decoded.id);
+    req.user = publicUser(await maybeOne(supabase.from('users').select('*').eq('id', decoded.id)));
   } catch {
     req.user = null;
   }

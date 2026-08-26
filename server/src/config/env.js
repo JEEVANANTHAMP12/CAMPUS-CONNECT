@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-const required = ['MONGODB_URI', 'JWT_SECRET'];
+const required = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'JWT_SECRET'];
 
 for (const key of required) {
   if (!process.env[key]) {
@@ -19,7 +19,8 @@ const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   isProd: process.env.NODE_ENV === 'production',
   port: parseInt(process.env.PORT, 10) || 5000,
-  mongoUri: process.env.MONGODB_URI,
+  supabaseUrl: process.env.SUPABASE_URL,
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpire: process.env.JWT_EXPIRE || '7d',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',

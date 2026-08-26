@@ -1,5 +1,4 @@
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const env = require('../config/env');
 
@@ -50,16 +49,18 @@ const helmetMiddleware = helmet({
 });
 
 /**
- * Mongo Sanitize to prevent NoSQL query operator injection
+ * Remove query-operator keys before they reach the data layer.
  */
-const mongoSanitizeMiddleware = mongoSanitize({
-  replaceWith: '_',
-  onSanitize: ({ req, key }) => {
-    if (!env.isProd) {
-      console.warn(`[SECURITY] Sanitized forbidden NoSQL key "${key}" in request to ${req.originalUrl}`);
-    }
-  },
-});
+const mongoSanitizeMiddleware = (req, _res, next) => {
+  const sanitize = (value) => {
+    if (!value || typeof value !== 'object') return;
+    Object.keys(value).forEach((key) => {
+      if (key.startsWith('$') || key.includes('.')) delete value[key];
+      else sanitize(value[key]);
+    });
+  };
+  sanitize(req.body); sanitize(req.query); sanitize(req.params); next();
+};
 
 /**
  * HTTP Parameter Pollution prevention

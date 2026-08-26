@@ -1,54 +1,5 @@
-const User = require('../models/User');
-
-exports.getUsers = async (req, res) => {
-  try {
-    const { role, department, search, page = 1, limit = 20 } = req.query;
-    const query = {};
-    if (role) query.role = role;
-    if (department) query.department = department;
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
-      ];
-    }
-    const skip = (page - 1) * limit;
-    const users = await User.find(query).skip(skip).limit(parseInt(limit)).populate('clubs', 'name');
-    const total = await User.countDocuments(query);
-    res.status(200).json({ success: true, data: users, total, pages: Math.ceil(total / limit) });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.getUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id)
-      .populate('clubs', 'name logo description')
-      .populate('achievements', 'title badge');
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-    res.status(200).json({ success: true, data: user });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.deleteUser = async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: 'User deleted' });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.updateUserRole = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, { role: req.body.role }, { new: true });
-    res.status(200).json({ success: true, data: user });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
+const { supabase, many, maybeOne, count, page, range, publicUser, enrich } = require('../data');
+exports.getUsers = async (req,res) => { try { const p=page(req.query.page,1), l=page(req.query.limit,20); let q=supabase.from('users').select('*',{count:'exact'}); if(req.query.role)q=q.eq('role',req.query.role); if(req.query.department)q=q.eq('department',req.query.department); if(req.query.search)q=q.or(`name.ilike.%${req.query.search}%,email.ilike.%${req.query.search}%`); const {data,error,count:total}=await q.range(...range(p,l)); if(error)throw error; res.status(200).json({success:true,data:await Promise.all(data.map(async x=>{const u=publicUser(x);u.clubs=await Promise.all((await many(supabase.from('club_members').select('club_id').eq('user_id',x.id))).map(async m=>enrich('clubs',await maybeOne(supabase.from('clubs').select('*').eq('id',m.club_id)))));return u;})),total,pages:Math.ceil(total/l)});}catch(err){res.status(500).json({success:false,message:err.message});} };
+exports.getUser=async(req,res)=>{try{const u=await maybeOne(supabase.from('users').select('*').eq('id',req.params.id));if(!u)return res.status(404).json({success:false,message:'User not found'});res.status(200).json({success:true,data:publicUser(u)});}catch(err){res.status(500).json({success:false,message:err.message});}};
+exports.deleteUser=async(req,res)=>{try{await supabase.from('users').delete().eq('id',req.params.id);res.status(200).json({success:true,message:'User deleted'});}catch(err){res.status(500).json({success:false,message:err.message});}};
+exports.updateUserRole=async(req,res)=>{try{const {data,error}=await supabase.from('users').update({role:req.body.role}).eq('id',req.params.id).select().single();if(error)throw error;res.status(200).json({success:true,data:publicUser(data)});}catch(err){res.status(500).json({success:false,message:err.message});}};

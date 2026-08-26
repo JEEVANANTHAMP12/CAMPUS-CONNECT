@@ -10,11 +10,6 @@ const pick = (obj, keys) => {
 const escapeRegex = (value = '') =>
   String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-const toObjectId = (id) => {
-  const mongoose = require('mongoose');
-  if (!id) return id;
-  if (id instanceof mongoose.Types.ObjectId) return id;
-  return new mongoose.Types.ObjectId(id);
-};
+const toObjectId = (id) => id;
 
 module.exports = { pick, escapeRegex, toObjectId };

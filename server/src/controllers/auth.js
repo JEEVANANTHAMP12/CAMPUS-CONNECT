@@ -1,84 +1,38 @@
-const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const { supabase, one, maybeOne, publicUser, many, enrich } = require('../data');
 const sendTokenResponse = require('../utils/sendToken');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const { pick } = require('../utils/pick');
-
-const PUBLIC_ROLES = ['student'];
+const env = require('../config/env');
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password, department, year, skills } = req.body;
-  const existing = await User.findOne({ email });
-  if (existing) throw ApiError.conflict('User already exists');
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role: PUBLIC_ROLES.includes(req.body.role) ? req.body.role : 'student',
-    department,
-    year,
-    skills: Array.isArray(skills) ? skills.slice(0, 20) : [],
-  });
-
+  if (await maybeOne(supabase.from('users').select('id').eq('email', String(email).toLowerCase()))) throw ApiError.conflict('User already exists');
+  const hash = await bcrypt.hash(password, env.bcryptRounds);
+  const user = publicUser(await one(supabase.from('users').insert({ name, email: String(email).toLowerCase(), password: hash, role: req.body.role === 'student' ? 'student' : 'student', department, year, skills: Array.isArray(skills) ? skills.slice(0, 20) : [] }).select()));
   sendTokenResponse(user, 201, res);
 });
-
 exports.login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email }).select('+password +loginAttempts +lockUntil');
+  const user = await maybeOne(supabase.from('users').select('*').eq('email', String(req.body.email).toLowerCase()));
   if (!user) throw ApiError.unauthorized('Invalid credentials');
-  if (!user.isActive) throw ApiError.forbidden('Account is disabled');
-  if (user.isLocked) throw ApiError.tooMany('Account locked. Try again in 15 minutes');
-
-  const isMatch = await user.matchPassword(password);
-  if (!isMatch) {
-    await user.incLoginAttempts();
+  if (!user.is_active) throw ApiError.forbidden('Account is disabled');
+  if (user.lock_until && new Date(user.lock_until) > new Date()) throw ApiError.tooMany('Account locked. Try again in 15 minutes');
+  if (!(await bcrypt.compare(req.body.password, user.password))) {
+    const attempts = user.lock_until && new Date(user.lock_until) < new Date() ? 1 : user.login_attempts + 1;
+    await one(supabase.from('users').update({ login_attempts: attempts, lock_until: attempts >= 5 ? new Date(Date.now() + 900000).toISOString() : null }).eq('id', user.id).select());
     throw ApiError.unauthorized('Invalid credentials');
   }
-
-  await user.resetLoginAttempts();
-  sendTokenResponse(user, 200, res);
+  const clean = publicUser(await one(supabase.from('users').update({ login_attempts: 0, lock_until: null, last_login: new Date().toISOString() }).eq('id', user.id).select()));
+  sendTokenResponse(clean, 200, res);
 });
-
-exports.logout = asyncHandler(async (req, res) => {
-  res.cookie('token', 'none', {
-    expires: new Date(Date.now() + 1000),
-    httpOnly: true,
-  });
-  res.status(200).json({ success: true, message: 'Logged out' });
-});
-
+exports.logout = asyncHandler(async (_req, res) => { res.cookie('token', 'none', { expires: new Date(Date.now() + 1000), httpOnly: true }); res.status(200).json({ success: true, message: 'Logged out' }); });
 exports.getMe = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id)
-    .populate('clubs', 'name logo')
-    .populate('achievements', 'title badge');
+  const user = publicUser(await maybeOne(supabase.from('users').select('*').eq('id', req.user.id)));
+  const memberships = await many(supabase.from('club_members').select('club_id').eq('user_id', req.user.id));
+  user.clubs = await Promise.all(memberships.map(async ({ club_id }) => enrich('clubs', await maybeOne(supabase.from('clubs').select('*').eq('id', club_id)))));
+  user.achievements = await Promise.all((await many(supabase.from('achievements').select('*').eq('user_id', req.user.id))).map((a) => enrich('achievements', a)));
   res.status(200).json({ success: true, data: user });
 });
-
-exports.updateProfile = asyncHandler(async (req, res) => {
-  const updates = pick(req.body, [
-    'name',
-    'department',
-    'year',
-    'skills',
-    'bio',
-    'profileImage',
-    'privacySettings',
-  ]);
-  const user = await User.findByIdAndUpdate(req.user.id, updates, {
-    new: true,
-    runValidators: true,
-  });
-  res.status(200).json({ success: true, data: user });
-});
-
-exports.updatePassword = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id).select('+password');
-  if (!(await user.matchPassword(req.body.currentPassword))) {
-    throw ApiError.unauthorized('Current password is incorrect');
-  }
-  user.password = req.body.newPassword;
-  await user.save();
-  sendTokenResponse(user, 200, res);
-});
+exports.updateProfile = asyncHandler(async (req, res) => { const updates = pick(req.body, ['name', 'department', 'year', 'skills', 'bio', 'profileImage', 'privacySettings']); if (updates.profileImage !== undefined) { updates.profile_image = updates.profileImage; delete updates.profileImage; } if (updates.privacySettings !== undefined) { updates.privacy_settings = updates.privacySettings; delete updates.privacySettings; } res.status(200).json({ success: true, data: publicUser(await one(supabase.from('users').update(updates).eq('id', req.user.id).select())) }); });
+exports.updatePassword = asyncHandler(async (req, res) => { const user = await maybeOne(supabase.from('users').select('*').eq('id', req.user.id)); if (!user || !(await bcrypt.compare(req.body.currentPassword, user.password))) throw ApiError.unauthorized('Current password is incorrect'); const clean = publicUser(await one(supabase.from('users').update({ password: await bcrypt.hash(req.body.newPassword, env.bcryptRounds), password_changed_at: new Date().toISOString() }).eq('id', user.id).select())); sendTokenResponse(clean, 200, res); });

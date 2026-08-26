@@ -14,7 +14,7 @@ const { apiLimiter } = require('./middleware/rateLimit');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const { initSockets } = require('./sockets');
 
-// Connect to MongoDB
+// Verify the Supabase service-role connection.
 connectDB();
 
 const app = express();

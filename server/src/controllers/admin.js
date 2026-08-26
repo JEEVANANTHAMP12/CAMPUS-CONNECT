@@ -1,105 +1,15 @@
-const User = require('../models/User');
-const Club = require('../models/Club');
-const Event = require('../models/Event');
-const Post = require('../models/Post');
-const Job = require('../models/Job');
-const Achievement = require('../models/Achievement');
-
-exports.getDashboardStats = async (req, res) => {
-  try {
-    const totalUsers = await User.countDocuments();
-    const totalClubs = await Club.countDocuments({ isActive: true });
-    const totalEvents = await Event.countDocuments();
-    const totalPosts = await Post.countDocuments();
-    const totalJobs = await Job.countDocuments();
-    const totalAchievements = await Achievement.countDocuments();
-    const usersByRole = await User.aggregate([
-      { $group: { _id: '$role', count: { $sum: 1 } } }
-    ]);
-    const usersByDept = await User.aggregate([
-      { $group: { _id: '$department', count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
-    ]);
-    const recentEvents = await Event.find().sort({ createdAt: -1 }).limit(5)
-      .populate('club', 'name').populate('createdBy', 'name');
-    const pendingApprovals = await Event.countDocuments({ isVerified: false });
-    const pendingJobVerifications = await Job.countDocuments({ isVerified: false });
-    const reportedPosts = await Post.countDocuments({ isReported: true });
-    res.status(200).json({
-      success: true,
-      data: {
-        totalUsers, totalClubs, totalEvents, totalPosts, totalJobs, totalAchievements,
-        usersByRole, usersByDept, recentEvents, pendingApprovals, pendingJobVerifications, reportedPosts
-      }
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
+const { supabase, many, enrich } = require('../data');
+const count = async (table, filters = {}) => {
+  let query = supabase.from(table).select('*', { count: 'exact', head: true });
+  Object.entries(filters).forEach(([key, value]) => { query = query.eq(key, value); });
+  const { count: result, error } = await query;
+  if (error) throw error;
+  return result || 0;
 };
-
-exports.getEngagementMetrics = async (req, res) => {
-  try {
-    const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const newUsers = await User.countDocuments({ createdAt: { $gte: last30Days } });
-    const newEvents = await Event.countDocuments({ createdAt: { $gte: last30Days } });
-    const newPosts = await Post.countDocuments({ createdAt: { $gte: last30Days } });
-    const newAchievements = await Achievement.countDocuments({ createdAt: { $gte: last30Days } });
-    const topClubs = await Club.aggregate([
-      { $project: { name: 1, memberCount: { $size: '$members' } } },
-      { $sort: { memberCount: -1 } },
-      { $limit: 5 }
-    ]);
-    res.status(200).json({
-      success: true,
-      data: { newUsers, newEvents, newPosts, newAchievements, topClubs }
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.getReportedContent = async (req, res) => {
-  try {
-    const reportedPosts = await Post.find({ isReported: true })
-      .populate('author', 'name profileImage')
-      .populate('reportedBy', 'name')
-      .populate('club', 'name');
-    res.status(200).json({ success: true, data: reportedPosts });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.moderatePost = async (req, res) => {
-  try {
-    const { action } = req.body;
-    if (action === 'delete') {
-      await Post.findByIdAndDelete(req.params.id);
-      res.status(200).json({ success: true, message: 'Post deleted' });
-    } else if (action === 'dismiss') {
-      await Post.findByIdAndUpdate(req.params.id, { isReported: false, reportedBy: null });
-      res.status(200).json({ success: true, message: 'Report dismissed' });
-    }
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.approvePendingEvents = async (req, res) => {
-  try {
-    const events = await Event.find({ isApproved: false })
-      .populate('club', 'name').populate('createdBy', 'name');
-    res.status(200).json({ success: true, data: events });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-exports.approvePendingJobs = async (req, res) => {
-  try {
-    const jobs = await Job.find({ isVerified: false }).populate('postedBy', 'name');
-    res.status(200).json({ success: true, data: jobs });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
+const grouped = (rows, key) => Object.entries(rows.reduce((out, row) => { const value = row[key] || null; out[value] = (out[value] || 0) + 1; return out; }, {})).map(([id, total]) => ({ _id: id, count: total }));
+exports.getDashboardStats = async (_req, res) => { try { const [totalUsers,totalClubs,totalEvents,totalPosts,totalJobs,totalAchievements,users,recentRows,pendingApprovals,pendingJobVerifications,reportedPosts] = await Promise.all([count('users'),count('clubs',{is_active:true}),count('events'),count('posts'),count('jobs'),count('achievements'),many(supabase.from('users').select('role,department')),many(supabase.from('events').select('*').order('created_at',{ascending:false}).limit(5)),count('events',{is_approved:false}),count('jobs',{is_verified:false}),count('posts',{is_reported:true})]); res.status(200).json({success:true,data:{totalUsers,totalClubs,totalEvents,totalPosts,totalJobs,totalAchievements,usersByRole:grouped(users,'role'),usersByDept:grouped(users,'department'),recentEvents:await Promise.all(recentRows.map(x=>enrich('events',x))),pendingApprovals,pendingJobVerifications,reportedPosts}}); } catch (err) { res.status(500).json({success:false,message:err.message}); } };
+exports.getEngagementMetrics = async (_req,res) => { try { const since=new Date(Date.now()-30*86400000).toISOString(); const [newUsers,newEvents,newPosts,newAchievements,clubs]=await Promise.all(['users','events','posts','achievements'].map(t=>supabase.from(t).select('*',{count:'exact',head:true}).gte('created_at',since)).concat([many(supabase.from('clubs').select('*'))])); const topClubs=await Promise.all(clubs.map(async c=>({name:c.name,memberCount:await count('club_members',{club_id:c.id})}))); topClubs.sort((a,b)=>b.memberCount-a.memberCount);res.status(200).json({success:true,data:{newUsers:newUsers.count||0,newEvents:newEvents.count||0,newPosts:newPosts.count||0,newAchievements:newAchievements.count||0,topClubs:topClubs.slice(0,5)}}); }catch(err){res.status(500).json({success:false,message:err.message});} };
+exports.getReportedContent=async(_q,r)=>{try{r.status(200).json({success:true,data:await Promise.all((await many(supabase.from('posts').select('*').eq('is_reported',true))).map(x=>enrich('posts',x)))});}catch(e){r.status(500).json({success:false,message:e.message});}};
+exports.moderatePost=async(q,r)=>{try{if(q.body.action==='delete')await supabase.from('posts').delete().eq('id',q.params.id);else if(q.body.action==='dismiss')await supabase.from('posts').update({is_reported:false,reported_by:null}).eq('id',q.params.id);r.status(200).json({success:true,message:q.body.action==='delete'?'Post deleted':'Report dismissed'});}catch(e){r.status(500).json({success:false,message:e.message});}};
+exports.approvePendingEvents=async(_q,r)=>{try{r.status(200).json({success:true,data:await Promise.all((await many(supabase.from('events').select('*').eq('is_approved',false))).map(x=>enrich('events',x)))});}catch(e){r.status(500).json({success:false,message:e.message});}};
+exports.approvePendingJobs=async(_q,r)=>{try{r.status(200).json({success:true,data:await Promise.all((await many(supabase.from('jobs').select('*').eq('is_verified',false))).map(x=>enrich('jobs',x)))});}catch(e){r.status(500).json({success:false,message:e.message});}};
