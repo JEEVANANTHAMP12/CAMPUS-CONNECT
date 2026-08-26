@@ -114,16 +114,35 @@ initSockets(io);
 
 // Start HTTP Server
 const PORT = env.port;
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    logger.error(`Port ${PORT} is already in use by another process. Freeing or retrying...`);
+  } else {
+    logger.error('Server error:', err);
+  }
+});
+
 server.listen(PORT, () => {
   logger.info(`Enterprise Server running in ${env.nodeEnv} mode on port ${PORT}`);
 });
 
 // Graceful shutdown handling
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received. Shutting down gracefully...');
+const shutdown = (signal) => {
+  logger.info(`${signal} received. Closing HTTP server and freeing socket...`);
   server.close(() => {
-    logger.info('Process terminated.');
+    logger.info('Server closed. Process exiting cleanly.');
+    process.exit(0);
+  });
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.once('SIGUSR2', () => {
+  server.close(() => {
+    process.kill(process.pid, 'SIGUSR2');
   });
 });
+
 
 module.exports = { app, server, io };
