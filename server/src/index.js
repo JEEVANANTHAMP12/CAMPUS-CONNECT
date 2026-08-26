@@ -1,5 +1,7 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
+const fs = require('fs');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -26,15 +28,22 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
 ];
 
+const checkOrigin = (origin, callback) => {
+  if (
+    !origin ||
+    allowedOrigins.includes(origin) ||
+    origin.endsWith('.vercel.app') ||
+    origin.endsWith('.onrender.com') ||
+    env.nodeEnv !== 'production'
+  ) {
+    return callback(null, true);
+  }
+  return callback(new Error('CORS not allowed for this origin'));
+};
+
 const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl) in dev
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error('CORS not allowed for this origin'));
-    },
+    origin: checkOrigin,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   },
@@ -53,14 +62,9 @@ app.use(cookieParser());
 // Strict CORS configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error('CORS policy: Not allowed by Access-Control-Allow-Origin'));
-    },
+    origin: checkOrigin,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
@@ -105,9 +109,22 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve frontend in production if built
+const clientDistPath = path.join(__dirname, '../../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
 // Centralized error handling
 app.use(notFound);
 app.use(errorHandler);
+
 
 // Initialize secure sockets
 initSockets(io);
