@@ -83,6 +83,17 @@ app.use('/uploads', express.static('uploads', {
 // SEO Routes (robots.txt, sitemap.xml)
 app.use('/', require('./routes/seo'));
 
+// Health & Root Status Endpoints (exempt from rate limiter for monitors & Render health checks)
+app.get(['/api/health', '/health'], (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'Campus Connect API',
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
 // Apply global API rate limiter
 app.use('/api', apiLimiter);
 
@@ -99,13 +110,17 @@ app.use('/api/messages', require('./routes/messages'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Basic health check alias
-app.get('/api/health', (req, res) => {
+// Root fallback when frontend is not served by backend
+app.get('/', (req, res, next) => {
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    return next();
+  }
   res.status(200).json({
     success: true,
+    message: 'Campus Connect API Server is online and active.',
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
   });
 });
 
@@ -125,7 +140,6 @@ if (fs.existsSync(clientDistPath)) {
 app.use(notFound);
 app.use(errorHandler);
 
-
 // Initialize secure sockets
 initSockets(io);
 
@@ -134,7 +148,7 @@ const PORT = env.port;
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    logger.error(`Port ${PORT} is already in use by another process. Freeing or retrying...`);
+    logger.error(`Port ${PORT} is already in use by another process.`);
   } else {
     logger.error('Server error:', err);
   }
@@ -142,10 +156,11 @@ server.on('error', (err) => {
 
 const initKeepAlive = require('./utils/keepAlive');
 
-server.listen(PORT, () => {
-  logger.info(`Enterprise Server running in ${env.nodeEnv} mode on port ${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  logger.info(`Enterprise Server running in ${env.nodeEnv} mode on port ${PORT} (0.0.0.0)`);
   initKeepAlive();
 });
+
 
 // Graceful shutdown handling
 const shutdown = (signal) => {
