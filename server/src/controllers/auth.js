@@ -16,17 +16,50 @@ exports.register = asyncHandler(async (req, res) => {
   sendTokenResponse(user, 201, res);
 });
 exports.login = asyncHandler(async (req, res) => {
-  const user = await maybeOne(supabase.from('users').select('*').eq('email', String(req.body.email).toLowerCase()));
+  const email = String(req.body.email || '').toLowerCase().trim();
+  const password = String(req.body.password || '');
+  if (!email || !password) throw ApiError.badRequest('Email and password are required');
+
+  const user = await maybeOne(supabase.from('users').select('*').eq('email', email));
   if (!user) throw ApiError.unauthorized('Invalid credentials');
-  if (!user.is_active) throw ApiError.forbidden('Account is disabled');
-  if (user.lock_until && new Date(user.lock_until) > new Date()) throw ApiError.tooMany('Account locked. Try again in 15 minutes');
-  if (!(await bcrypt.compare(req.body.password, user.password))) {
-    const attempts = user.lock_until && new Date(user.lock_until) < new Date() ? 1 : user.login_attempts + 1;
-    await one(supabase.from('users').update({ login_attempts: attempts, lock_until: attempts >= 5 ? new Date(Date.now() + 900000).toISOString() : null }).eq('id', user.id).select());
+  if (user.is_active === false) throw ApiError.forbidden('Account is disabled');
+  if (user.lock_until && new Date(user.lock_until) > new Date()) {
+    throw ApiError.tooMany('Account locked. Try again in 15 minutes');
+  }
+
+  let isMatch = false;
+  try {
+    if (user.password) {
+      isMatch = await bcrypt.compare(password, user.password);
+    }
+  } catch (e) {
+    isMatch = false;
+  }
+
+  if (!isMatch) {
+    const attempts = user.lock_until && new Date(user.lock_until) < new Date() ? 1 : ((user.login_attempts || 0) + 1);
+    try {
+      await supabase.from('users').update({
+        login_attempts: attempts,
+        lock_until: attempts >= 5 ? new Date(Date.now() + 900000).toISOString() : null,
+      }).eq('id', user.id);
+    } catch (e) {}
     throw ApiError.unauthorized('Invalid credentials');
   }
-  const clean = publicUser(await one(supabase.from('users').update({ login_attempts: 0, lock_until: null, last_login: new Date().toISOString() }).eq('id', user.id).select()));
-  sendTokenResponse(clean, 200, res);
+
+  let cleanUser = null;
+  try {
+    const updated = await one(supabase.from('users').update({
+      login_attempts: 0,
+      lock_until: null,
+      last_login: new Date().toISOString(),
+    }).eq('id', user.id).select());
+    cleanUser = publicUser(updated);
+  } catch (e) {
+    cleanUser = publicUser(user);
+  }
+
+  sendTokenResponse(cleanUser, 200, res);
 });
 exports.logout = asyncHandler(async (_req, res) => { res.cookie('token', 'none', { expires: new Date(Date.now() + 1000), httpOnly: true }); res.status(200).json({ success: true, message: 'Logged out' }); });
 exports.getMe = asyncHandler(async (req, res) => {

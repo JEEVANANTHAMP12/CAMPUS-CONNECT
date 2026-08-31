@@ -1,6 +1,6 @@
 const { supabase, one, maybeOne, many, doc, docs, enrich, publicUser } = require('../data');
 const ApiError = require('../utils/ApiError');
-const asyncHandler = require('../middleware/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
 
 const DEFAULT_DEPARTMENTS = [
   { name: 'Artificial Intelligence', code: 'AI', description: 'Department of Artificial Intelligence' },
