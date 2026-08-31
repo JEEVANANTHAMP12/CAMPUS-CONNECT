@@ -75,9 +75,32 @@ exports.moderateRules = [
   body('action').isIn(['delete', 'dismiss']),
 ];
 
+exports.departmentCreateRules = [
+  body('name').trim().isLength({ min: 2, max: 100 }).withMessage('Department name is required'),
+  body('code').trim().isLength({ min: 2, max: 20 }).withMessage('Department code is required (e.g. CSE, IT)'),
+  body('description').optional().trim().isLength({ max: 1000 }),
+  body('hodId').optional({ nullable: true, checkFalsy: true }),
+];
+
+exports.departmentUpdateRules = [
+  body('name').optional().trim().isLength({ min: 2, max: 100 }),
+  body('code').optional().trim().isLength({ min: 2, max: 20 }),
+  body('description').optional().trim().isLength({ max: 1000 }),
+  body('hodId').optional({ nullable: true, checkFalsy: true }),
+];
+
+exports.assignHodRules = [
+  body('hodId').notEmpty().withMessage('HOD user ID is required'),
+];
+
+exports.statusRules = [
+  body('isActive').isBoolean().withMessage('isActive must be boolean'),
+];
+
 exports.idParam = [mongoId('id')];
 exports.userIdParam = [mongoId('userId')];
 exports.memberIdParam = [mongoId('id'), mongoId('memberId')];
 exports.clubIdParam = [mongoId('clubId')];
 exports.pageQuery = pagination;
 exports.searchQuery = [query('search').optional().trim().isLength({ max: 80 })];
+

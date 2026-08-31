@@ -23,6 +23,7 @@ const camel = {
   is_pinned: 'isPinned', is_reported: 'isReported', reported_by: 'reportedBy', posted_by: 'postedBy',
   is_verified: 'isVerified', verified_by: 'verifiedBy', user_id: 'user', is_highlighted: 'isHighlighted',
   highlighted_by: 'highlightedBy', reference_id: 'referenceId', reference_model: 'referenceModel', is_read: 'isRead', message_type: 'messageType', applied_at: 'appliedAt',
+  hod_id: 'hodId',
 };
 const doc = (row) => {
   if (!row) return row;
@@ -83,6 +84,10 @@ async function enrich(table, row, options = {}) {
     out.user = users.get(row.user_id) || row.user_id; out.highlightedBy = users.get(row.highlighted_by) || row.highlighted_by; out.club = clubs.get(row.club) || row.club; out.likes = likes.map((x) => x.user_id); out.comments = comments.map((x) => ({ ...doc(x), author: commentUsers.get(x.author) || x.author }));
   }
   if (table === 'messages') { const users = await usersByIds([row.sender]); out.sender = users.get(row.sender) || row.sender; }
+  if (table === 'departments') {
+    const users = await usersByIds([row.hod_id]);
+    out.hod = users.get(row.hod_id) || null;
+  }
   return out;
 }
 module.exports = { supabase, one, maybeOne, many, count, page, range, doc, docs, publicUser, usersByIds, clubByIds, notify, enrich };

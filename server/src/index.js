@@ -13,6 +13,8 @@ const { applySecurityMiddleware } = require('./middleware/security');
 const { apiLimiter } = require('./middleware/rateLimit');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const { initSockets } = require('./sockets');
+const { generateToken, verifyToken } = require('./middleware/csrf');
+const auditLog = require('./middleware/audit');
 
 // Verify the Supabase service-role connection.
 connectDB();
@@ -44,8 +46,9 @@ const checkOrigin = (origin, callback) => {
 const io = new Server(server, {
   cors: {
     origin: checkOrigin,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
   },
   pingTimeout: 30000,
   pingInterval: 25000,
@@ -65,16 +68,21 @@ app.use(
     origin: checkOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token'],
   })
 );
 
 // Payload size limits to prevent memory exhaustion
 app.use(express.json({ limit: env.maxBodySize }));
-app.use(express.urlencoded({ extended: true, limit: env.maxBodySize }));
+app.use(express.urlencoded({ extended: false, limit: env.maxBodySize }));
 
-// Serve static uploads with secure headers
-app.use('/uploads', express.static('uploads', {
+// CSRF protection - generate token on every response, verify on state-changing requests
+app.use(generateToken);
+app.use('/api', verifyToken);
+
+// Serve static uploads with secure headers and auth check
+const { protect: protectStatic } = require('./middleware/auth');
+app.use('/uploads', protectStatic, express.static('uploads', {
   dotfiles: 'ignore',
   etag: true,
   maxAge: '7d',
@@ -97,6 +105,9 @@ app.get(['/api/health', '/health'], (req, res) => {
 // Apply global API rate limiter
 app.use('/api', apiLimiter);
 
+// Audit logging for security-relevant events
+app.use(auditLog);
+
 // API Routes
 app.use('/api/security', require('./routes/security'));
 app.use('/api/auth', require('./routes/auth'));
@@ -109,6 +120,7 @@ app.use('/api/achievements', require('./routes/achievements'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/departments', require('./routes/departments'));
 app.use('/api/stats', require('./routes/stats'));
 
 // Root fallback when frontend is not served by backend

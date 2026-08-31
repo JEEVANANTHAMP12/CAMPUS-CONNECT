@@ -45,9 +45,17 @@ const initSockets = (io) => {
       if (parts.includes(socket.userId)) socket.join(roomId);
     });
 
-    socket.on('join-club', (clubId) => {
-      if (typeof clubId === 'string' && clubId.length <= 40) {
-        socket.join(`club:${clubId}`);
+    socket.on('join-club', async (clubId) => {
+      if (typeof clubId !== 'string' || clubId.length > 40) return;
+      try {
+        const membership = await maybeOne(
+          supabase.from('club_members').select('id').eq('club_id', clubId).eq('user_id', socket.userId)
+        );
+        if (membership) {
+          socket.join(`club:${clubId}`);
+        }
+      } catch (err) {
+        // Silently reject unauthorized club joins
       }
     });
 
@@ -66,6 +74,15 @@ const initSockets = (io) => {
       const receiverSocket = onlineUsers.get(receiver);
       if (receiverSocket) {
         io.to(receiverSocket).emit('user-stop-typing', { userId: socket.userId });
+      }
+    });
+
+    socket.on('send-message', (data) => {
+      const receiver = data?.receiver;
+      if (!receiver) return;
+      const receiverSocket = onlineUsers.get(receiver);
+      if (receiverSocket) {
+        io.to(receiverSocket).emit('receive-message', data);
       }
     });
 
