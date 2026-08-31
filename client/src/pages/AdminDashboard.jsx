@@ -312,10 +312,10 @@ export default function AdminDashboard() {
   }
 
   const statCards = [
-    { label: 'Registered Users', value: stats?.totalUsers || 2450, icon: Users },
-    { label: 'Academic Departments', value: departmentsList.length || 10, icon: Building2 },
-    { label: 'Campus Chapters', value: stats?.totalClubs || 18, icon: Trophy },
-    { label: 'Live Events', value: stats?.totalEvents || 42, icon: Calendar },
+    { label: 'Registered Users', value: stats?.totalUsers ?? userTotal ?? 0, icon: Users },
+    { label: 'Academic Departments', value: departmentsList.length || 0, icon: Building2 },
+    { label: 'Campus Chapters', value: stats?.totalClubs ?? 0, icon: Trophy },
+    { label: 'Live Events', value: stats?.totalEvents ?? 0, icon: Calendar },
   ];
 
   const tabs = [
