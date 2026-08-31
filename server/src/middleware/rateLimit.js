@@ -14,6 +14,7 @@ const apiLimiter = rateLimit({
   max: env.rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   handler: formatRateLimitMessage('Too many requests from this IP. Please try again later.'),
 });
 
@@ -23,6 +24,7 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true,
+  validate: { xForwardedForHeader: false },
   handler: formatRateLimitMessage('Too many authentication attempts. Please try again in 15 minutes.'),
 });
 
@@ -31,6 +33,7 @@ const actionLimiter = rateLimit({
   max: 30, // 30 actions per minute
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   handler: formatRateLimitMessage('You are performing actions too quickly. Please slow down.'),
 });
 

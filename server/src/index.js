@@ -20,6 +20,7 @@ const auditLog = require('./middleware/audit');
 connectDB();
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 // Configure Socket.io with strict CORS and authentication
